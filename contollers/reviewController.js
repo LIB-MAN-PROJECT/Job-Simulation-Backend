@@ -1,7 +1,7 @@
 const Review = require("../models/ReviewSchema");
 const JobSimulation = require("../models/JobSimulationSchema");
 
-// ✅ Submit a review (one per user per simulation)
+//  Submit a review (one per user per simulation)
 exports.submitReview = async (req, res,next) => {
   try {
     const { simulationId, rating, comment } = req.body;
@@ -36,7 +36,7 @@ next(err);
   }
 };
 
-// ✅ Get all reviews (admin view maybe)
+//  Get all reviews (admin view maybe)
 exports.getAllReviews = async (req, res,next) => {
   try {
     const reviews = await Review.find().populate("userId", "username");
@@ -49,7 +49,7 @@ next(err);
   }
 };
 
-// ✅ Get reviews for a specific simulation
+//  Get reviews for a specific simulation
 exports.getReviewsBySimulation = async (req, res,next) => {
   try {
     const simulationId = req.params.simulationId;

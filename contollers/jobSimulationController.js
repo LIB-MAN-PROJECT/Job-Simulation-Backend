@@ -17,14 +17,14 @@ exports.jobSimulation = async (req, res,next) => {
       duration,
     } = req.body;
 
-    // ✅ Get company info (using companyId from req.body)
+    //  Get company info (using companyId from req.body)
 const company = await Company.findById(companyId);
 if (!company) {
   return res.status(404).json({ message: "Company not found" });
 }
 
 
-    // ✅ Create job simulation first
+    //  Create job simulation first
     const newJobSimulation = new JobSimulation({
       title,
       description,
@@ -44,7 +44,7 @@ if (!company) {
 
     const taskIds = [];
 
-    // ✅ Only handle tasks if any were provided
+    //  Only handle tasks if any were provided
     let tasks = [];
     if (req.body.tasks) {
       try {
@@ -63,7 +63,7 @@ if (!company) {
       let resourceFileUrl = null;
       let resourceFilePublicId = null;
 
-      // ✅ Check if a file exists for this task
+      //  Check if a file exists for this task
       if (req.files && req.files[`taskFiles[${i}]`]) {
         const file = req.files[`taskFiles[${i}]`][0];
 
@@ -72,7 +72,7 @@ if (!company) {
           folder: "Jobsimulations/tasks",
         });
 
-        // ✅ Delete the local file
+        //  Delete the local file
         fs.unlink(file.path, (err) => {
           if (err) {
             console.error("Failed to delete local file:", err);
@@ -85,7 +85,7 @@ if (!company) {
         resourceFilePublicId = uploadResult.public_id;
       }
 
-      // ✅ Only create task if it has either content or file
+      //  Only create task if it has either content or file
       if (task.content || resourceFileUrl) {
         const newTask = new Task({
           title: task.title,
@@ -101,7 +101,7 @@ if (!company) {
       }
     }
 
-    // ✅ Save task references if any
+    //  Save task references if any
     if (taskIds.length > 0) {
       newJobSimulation.tasks = taskIds;
       await newJobSimulation.save();

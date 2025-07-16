@@ -172,8 +172,8 @@ exports.reviewInternshipApplication = async (req, res) => {
 
     await application.save();
 
-    res.status(200).json({ message: "Application reviewed", application });
+    res.status(200).json({ message: "Internship Application reviewed", application });
   } catch (err) {
-    res.status(500).json({ message: "Failed to review application", error: err.message });
+    res.status(500).json({ message: "Failed to review Internship Application", error: err.message });
   }
 };
