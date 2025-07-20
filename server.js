@@ -29,7 +29,7 @@ app.use('/api/auth',registrationRoutes);
 app.use('/api/user',userRoutes);
 app.use('/api/recruiter',recruiterRoutes);
 app.use('/api/admin',adminRoutes);
-app.use('api/docs',swaggerUi.serve,swaggerUi.setup(swaggerdocument));
+app.use('/api/docs',swaggerUi.serve,swaggerUi.setup(swaggerdocument));
 
 const startServer = async () => {
     try {
