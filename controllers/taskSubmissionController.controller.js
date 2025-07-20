@@ -1,0 +1,156 @@
+
+// check if user is enrolled
+//Allow task submission
+//Update progress based on completion score
+
+//  On task submission:
+
+// 1.Save the submission
+
+// 2. Pull the completionScore from the related Task
+
+// 3.Store that score in TaskSubmission (completionScoreEarned)
+
+//  After submission:
+
+// 1. Fetch the user's Enrollment for that simulation
+
+// 2. Increment their progress by the submitted score
+
+// 3.If progress hits or exceeds 100, set completedAt
+
+const { errorMessage, successMessage } = require("../utils/responseHandler.util");
+const { readData, WriteData } = require("../utils/fileHandler.util");
+const { uploadFile, deleteFile } = require("../utils/uploadFile.util");
+const Enroll = require("../models/enrollmentModel.model")
+const {Task,TaskSubmission}=require("../models/taskModel.model");
+
+
+
+const submitTask= async(req,res)=>{
+    const{simulationId,taskId}=req.params;
+
+    try {
+        //checking user enrollment
+        const enrolled= await Enroll.findOne({userId:req.user.id,simulationId});
+        console.log("Enrollment Document",enrolled);
+        if (!enrolled) return errorMessage(res,400,"You aren't enrolled in this simulation");
+         
+        //checking for existence of submission
+        const submissionExists = await TaskSubmission.findOne({userId:req.user.id,simulationId,taskId});
+
+        if(submissionExists) return errorMessage(res,400,"You have already submitted this task");
+
+        //checking file existence
+        if(!req.file || !req.file.path){
+        console.log("No valid file found");
+        return errorMessage(res, 400, "File not provided or invalid");
+        }
+
+        //upload file
+        const uploadedFile = await uploadFile(req,req.file.path,"upskill/taskSubmissions",res);
+    
+        //fetch task
+        const task = await Task.findById(taskId);
+        if(!task) return errorMessage(res,404,"Task not found"); 
+        
+        // 1.Save the submission
+    
+        const taskSubmission= await TaskSubmission.create({
+            userId: req.user.id,
+            firstName: req.user.firstName,
+            lastName: req.user.lastName,
+            taskId,
+            simulationId,
+            submissionUrl: uploadedFile.url,
+            submissionPublicId: uploadedFile.public_id,
+            isSubmitted:true,
+        });
+
+        //Recalculate progress
+        const totalTasks=await Task.countDocuments({simulationId}); //Total tasks in simulation
+        const submittedTaskcount= await TaskSubmission.countDocuments({
+            userId:req.user.id,
+            simulationId:simulationId,
+            isSubmitted:true
+        });// Total number of submitted tasks by specific user
+
+        //Calculate progress
+        const progressPercent = totalTasks > 0 
+      ? Math.floor((submittedTaskcount / totalTasks) * 100)
+      : 0;
+
+        //update user's enrollment progress
+        enrolled.progress=progressPercent;
+
+        //Mark completion if all tasks are submitted
+        if(progressPercent >= 96 && !enrolled.completedAt){
+            enrolled.completedAt=Date.now();
+            enrolled.isReadyForReview =true;
+            enrolled.isReviewed=false;
+            enrolled.reviewState="Pending";
+        }
+        //saving updates
+        await enrolled.save()
+
+        return successMessage(res,200,"Task submitted successfully",{
+            submission: taskSubmission,
+            progress: progressPercent
+        })
+    
+    } catch (error) {
+        console.error("Task submission error:",error);
+        return errorMessage(res,500,"Internal Server Error",error);
+    }
+}
+
+const editSubmittedTask=async(req,res)=>{
+    const {simulationId,taskId,taskSubmissionId}=req.params;
+
+    try {
+        //checking user enrollment
+        const enrolled= await Enroll.findOne({userId:req.user.id,simulationId});
+        if (!enrolled) return errorMessage(res,400,"You aren't enrolled in this simulation");
+
+
+        const submittedTask= await TaskSubmission.findOne({userId:req.user.id,simulationId,taskId});
+        if(!submittedTask){
+        return errorMessage(res,404,"Submitted Task not found");
+        }
+        
+        //Ensuring submission belongs to user
+        if (submittedTask.userId.toString() !== req.user.id.toString()) return errorMessage(res,403,"Invalid editing: You didn't make this submission");
+
+        //Ensuring the simulations match
+        if(submittedTask.simulationId.toString()!== simulationId) return errorMessage(res,400,"Submission doesn't belong to thus simulation");
+
+        //checking file existence
+        if(!req.file || !req.file.path){
+        console.log("No valid file found");
+        return errorMessage(res, 400, "File not provided or invalid");
+        }
+        
+        const updates={}
+        updates.submittedAt = Date.now();
+        if (req.file?.path){
+        if(submittedTask.submissionPublicId){
+            await deleteFile(submittedTask.submissionPublicId);
+        }
+
+        //upload new file
+        const uploadedFile = await uploadFile(req,req.file.path,"upskill/taskSubmissions",res);
+
+        updates.submissionUrl=uploadedFile.url;
+        updates.submissionPublicId=uploadedFile.public_id;
+        }
+
+        const updatedSubmittedTask = await TaskSubmission.findByIdAndUpdate(taskSubmissionId,{$set:updates},{new:true});
+
+        return successMessage(res,200,"task updated successfully",updatedSubmittedTask);
+    } catch (error) {
+        console.error("Task submission edit error:",error);
+        return errorMessage(res,500,"Internal Server Error",error);
+    }
+}
+
+module.exports={submitTask,editSubmittedTask}
