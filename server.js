@@ -1,8 +1,12 @@
 const express = require("express");
 const app = express();
 require("dotenv").config();
+const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
+swaggerdocument = require("./swagger-output.json");
 const connectDB = require("./config/db.config");
 const errorHandler = require("./middleware/errorHandler.middleware");
+
 const registrationRoutes = require("./routes/registrationRoute.route");
 const userRoutes = require("./routes/userRoute.route");
 const recruiterRoutes =require("./routes/recruiterRoute.route");
@@ -13,7 +17,7 @@ const PORT = process.env.PORT || 5000;
 //middleware
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-
+app.use(cors);
 
 //routes
 //TODO: Remove Middleware Logging statements
@@ -25,6 +29,7 @@ app.use('/api/auth',registrationRoutes);
 app.use('/api/user',userRoutes);
 app.use('/api/recruiter',recruiterRoutes);
 app.use('/api/admin',adminRoutes);
+app.use('api/docs',swaggerUi.serve,swaggerUi.setup(swaggerdocument));
 
 const startServer = async () => {
     try {
