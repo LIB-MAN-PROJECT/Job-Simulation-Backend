@@ -1,0 +1,6 @@
+*.txt
+.env
+node_modules/
+/1
+/uploads
+/localdata
