@@ -25,25 +25,37 @@ const signup = async (req, res) => {
         const hashedpassword = await bcrypt.hash(password, 10);
 
         let user;
-        if (role === "recruiter"){
-            //Check if company exists
-            let company = await Company.findOne({companyName});
-            
-            if(company){
-                if(company.companyCode !== companyCode){
-                    return errorMessage(res,400,"Invalid Company Code");
+        if (role === "recruiter" ){
+            if(website && description){
+                //Check if company exists
+                let company = await Company.findOne({companyName});
+                if(company){
+                    if(company.companyCode !== companyCode){
+                        return errorMessage(res,400,"Invalid Credentials");
+                    }
+                    //add recruiter to company
+                     company.recruiters.push(user._id);
+                    await company.save();
                 }
-                //add recruiter to company
-                 company.recruiters.push(user._id);
-                await company.save();
+
             }
             else{
                 //creating new company if it doesn't exist
+
+                //checking file existence
+                if(!req.file || !req.file.path){
+                console.log("No valid file found");
+                return errorMessage(res, 400, "File not provided or invalid");
+                }
+
+                const uploadedFile = await uploadFile(req, req.file.path, "/upskill/companyLogos",res);
+
                 company = await Company.create({
                 companyName,
                 companyCode,
                 description,
-                logoUrl,
+                logoUrl: uploadedFile.url,
+                logoPublicId: uploadedFile.public_id,
                 website,
                 isVerified:false
                 });
