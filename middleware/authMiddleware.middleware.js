@@ -36,7 +36,6 @@ function authorizeRole(...allowedRoles){
             return errorMessage(res,403,"Access Forbidden")
         }
         const user= await User.findById(req.user.id);
-        console.log("user=",user)
         if (user.role ==="recruiter"){
             if(!user.isVerified){
                return errorMessage(res,403,"You must be verified to proceed");
