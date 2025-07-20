@@ -14,6 +14,12 @@ const createJobSim = async (req, res) => {
     try {
         // const localJobSim = await readData("simulations.json");
 
+        //checking file existence
+        if(!req.file || !req.file.path){
+        console.log("No valid file found");
+        return errorMessage(res, 400, "File not provided or invalid");
+        }
+
         const uploadedFile = await uploadFile(req, req.file.path, "/upskill/jobSims",res)
 
         const jobSim = await JobSim.create({
