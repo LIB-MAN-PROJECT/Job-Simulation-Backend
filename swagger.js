@@ -5,8 +5,8 @@ const doc={
         title: "Job Simulation Management API",
         description: "An API for managing Job Simulations and Internship for a variety of different categories of users"
     },
-    host: "http://localhost:3000",
-    schemes:["http"],
+    host: "https://job-simulation-backend-3e6w.onrender.com",
+    schemes:["https"],
     components: {
     securitySchemes: {
       bearerAuth: {

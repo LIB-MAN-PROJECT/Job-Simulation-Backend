@@ -5,10 +5,10 @@
     "description": "An API for managing Job Simulations and Internship for a variety of different categories of users",
     "version": "1.0.0"
   },
-  "host": "http://localhost:3000",
+  "host": "https://job-simulation-backend-3e6w.onrender.com",
   "basePath": "/",
   "schemes": [
-    "http"
+    "https"
   ],
   "paths": {
     "/": {
@@ -258,6 +258,88 @@
             "name": "authorization",
             "in": "header",
             "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/user/simulation/{simulationId}/create-review": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "simulationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "example": "any"
+                },
+                "rating": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/user/simulation/{simulationId}/{reviewId}/edit-review": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "simulationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "example": "any"
+                },
+                "rating": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {
