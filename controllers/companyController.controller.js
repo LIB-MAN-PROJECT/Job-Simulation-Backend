@@ -33,7 +33,7 @@ const createCompany = async (req, res) => {
 
 const editCompany = async (req, res) => {
     const { companyName, companyEmail, description, website } = req.body
-    const { id } = req.params
+    const { companyId } = req.params
 
     try {
 
@@ -45,7 +45,7 @@ const editCompany = async (req, res) => {
 
         //if file upload exits
         if (req.file?.path) {
-            const company = await Company.findById(id);
+            const company = await Company.findById(companyId);
 
             if (company.logoPublicId) {
                 await deleteFile(company.logoPublicId);
@@ -58,7 +58,7 @@ const editCompany = async (req, res) => {
             updates.logoPublicId = uploadedFile.public_id;
         }
 
-        const updatedCompany = await Company.findByIdAndUpdate(id, { $set: updates }, { new: true });
+        const updatedCompany = await Company.findByIdAndUpdate(companyId, { $set: updates }, { new: true });
         if(!updatedCompany){
             return errorMessage(res,404,"Organization not found")
         }
@@ -70,10 +70,10 @@ const editCompany = async (req, res) => {
 }
 
 const deleteCompany = async(req,res)=>{
-    const {id}=req.params;
+    const {companyId}=req.params;
 
     try {
-       const company= Company.findByIdAndDelete(id);
+       const company= Company.findByIdAndDelete(companyId);
        if(!company) return errorMessage(res,404,"Company Not found"); 
     } catch (error) {
          console.error("Company Deletion Error", error);
