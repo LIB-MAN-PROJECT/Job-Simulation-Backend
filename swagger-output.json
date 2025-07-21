@@ -49,10 +49,16 @@
                 "role": {
                   "example": "any"
                 },
-                "companyName": {
+                "companyCustomId": {
                   "example": "any"
                 },
                 "companyCode": {
+                  "example": "any"
+                },
+                "companyName": {
+                  "example": "any"
+                },
+                "companyEmail": {
                   "example": "any"
                 },
                 "description": {
@@ -66,8 +72,8 @@
           }
         ],
         "responses": {
-          "400": {
-            "description": "Bad Request"
+          "default": {
+            "description": ""
           }
         }
       }
@@ -115,12 +121,12 @@
         }
       }
     },
-    "/api/user/view-simulations/{id}": {
+    "/api/user/view-simulations/{simulationId}": {
       "get": {
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "simulationId",
             "in": "path",
             "required": true,
             "type": "string"
@@ -359,12 +365,12 @@
         }
       }
     },
-    "/api/user/view-internships/{id}": {
+    "/api/user/view-internships/{internshipId}": {
       "get": {
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "internshipId",
             "in": "path",
             "required": true,
             "type": "string"
@@ -480,12 +486,12 @@
         }
       }
     },
-    "/api/recruiter/edit-company/{id}": {
+    "/api/recruiter/edit-company/{companyId}": {
       "put": {
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "companyId",
             "in": "path",
             "required": true,
             "type": "string"
@@ -524,7 +530,7 @@
         }
       }
     },
-    "/api/recruiter/create-job-sim": {
+    "/api/recruiter/create-job-simulation": {
       "post": {
         "description": "",
         "parameters": [
@@ -571,12 +577,12 @@
         }
       }
     },
-    "/api/recruiter/edit-job-sim/{id}": {
+    "/api/recruiter/edit-job-simulation/{simulationId}": {
       "put": {
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "simulationId",
             "in": "path",
             "required": true,
             "type": "string"
@@ -624,12 +630,12 @@
         }
       }
     },
-    "/api/recruiter/delete-job-sim/{id}": {
+    "/api/recruiter/delete-job-simulation/{simulationId}": {
       "delete": {
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "simulationId",
             "in": "path",
             "required": true,
             "type": "string"
@@ -647,12 +653,12 @@
         }
       }
     },
-    "/api/recruiter/create-task/{id}": {
+    "/api/recruiter/create-task/{simulationId}": {
       "post": {
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "simulationId",
             "in": "path",
             "required": true,
             "type": "string"
@@ -688,12 +694,12 @@
         }
       }
     },
-    "/api/recruiter/edit-task/{id}": {
+    "/api/recruiter/edit-task/{taskId}": {
       "put": {
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "taskId",
             "in": "path",
             "required": true,
             "type": "string"
@@ -729,12 +735,12 @@
         }
       }
     },
-    "/api/recruiter/delete-task/{id}": {
+    "/api/recruiter/delete-task/{taskId}": {
       "delete": {
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "taskId",
             "in": "path",
             "required": true,
             "type": "string"
@@ -796,12 +802,12 @@
         }
       }
     },
-    "/api/recruiter/edit-internship/{id}": {
+    "/api/recruiter/edit-internship/{internshipId}": {
       "put": {
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "internshipId",
             "in": "path",
             "required": true,
             "type": "string"
@@ -846,12 +852,12 @@
         }
       }
     },
-    "/api/recruiterdelete-internship/{id}": {
+    "/api/recruiterdelete-internship/{internshipId}": {
       "delete": {
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "internshipId",
             "in": "path",
             "required": true,
             "type": "string"
