@@ -31,7 +31,7 @@ const createInternshipPost = async (req, res) => {
 
 const editInternshipPost = async (req, res) => {
     const { title, description, field, location, mode, deadline } = req.body;
-    const { id } = req.params;
+    const { internshipId } = req.params;
 
     try {
         const updates = {}
@@ -42,7 +42,7 @@ const editInternshipPost = async (req, res) => {
         if (mode) updates.mode = mode;
         if (deadline) updates.deadline = deadline;
 
-        const updatedInternshipPost = await InternshipPost.findByIdAndUpdate(id, { $set: updates }, { new: true });
+        const updatedInternshipPost = await InternshipPost.findByIdAndUpdate(internshipId, { $set: updates }, { new: true });
 
         if (!updatedInternshipPost) {
             return errorMessage(res, 404, "Post not found");
@@ -55,9 +55,9 @@ const editInternshipPost = async (req, res) => {
 }
 
 const deleteInternshipPost = async (req, res) => {
-    const { id } = req.params;
+    const { internshipId } = req.params;
     try {
-        const internshipPost = await InternshipPost.findByIdAndDelete(id);
+        const internshipPost = await InternshipPost.findByIdAndDelete(internshipId);
         if (!internshipPost) {
             return errorMessage(res, 404, "No Internship post")
         }
@@ -81,9 +81,9 @@ const viewAllInternshipPosts = async (req, res) => {
 }
 
 const viewInternshipPostById = async (req, res) => {
-    const { id } = req.params;
+    const { internshipId } = req.params;
     try {
-        const internshipPosts = await InternshipPost.findById(id);
+        const internshipPosts = await InternshipPost.findById(internshipId);
 
         if (!internshipPosts) {
             return errorMessage(res, 404, "Post not found");
