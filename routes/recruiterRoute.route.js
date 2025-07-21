@@ -12,7 +12,7 @@ const router = Router();
 router.post('/create-company',uploadImage.single("file"),authMiddleware,
 authorizeRole("recruiter"),companyController.createCompany);
 
-router.put('/edit-company/:id',uploadImage.single("file"),authMiddleware,authorizeRole("recruiter"),companyController.editCompany);
+router.put('/edit-company/:companyId',uploadImage.single("file"),authMiddleware,authorizeRole("recruiter"),companyController.editCompany);
 
 //JOB SIM ROUTES
 
@@ -35,7 +35,7 @@ router.put('/edit-company/:id',uploadImage.single("file"),authMiddleware,authori
  *       200:
  *         description: File uploaded successfully
  */
-router.post('/create-job-sim',uploadImage.single("file"),
+router.post('/create-job-simulation',uploadImage.single("file"),
 authMiddleware,authorizeRole("recruiter"),jobSimulationController.createJobSim);
 
 /**
@@ -55,28 +55,28 @@ authMiddleware,authorizeRole("recruiter"),jobSimulationController.createJobSim);
  *       200:
  *         description: File uploaded successfully
  */
-router.put('/edit-job-sim/:id',uploadImage.single("file"),
+router.put('/edit-job-simulation/:simulationId',uploadImage.single("file"),
 authMiddleware,authorizeRole("recruiter"),jobSimulationController.editJobSimById);
 
-router.delete('/delete-job-sim/:id',authMiddleware,
+router.delete('/delete-job-simulation/:simulationId',authMiddleware,
 authorizeRole("recruiter"),jobSimulationController.deleteJobSimById);
 
 //TASK ROUTES
-router.post('/create-task/:id',authMiddleware,
+router.post('/create-task/:simulationId',authMiddleware,
 authorizeRole("recruiter"),jobSimulationController.createTask);
 
-router.put('/edit-task/:id',authMiddleware,authorizeRole("recruiter"),jobSimulationController.editTask);
+router.put('/edit-task/:taskId',authMiddleware,authorizeRole("recruiter"),jobSimulationController.editTask);
 
-router.delete('/delete-task/:id',authMiddleware,authorizeRole("recruiter"),jobSimulationController.deleteTask);
+router.delete('/delete-task/:taskId',authMiddleware,authorizeRole("recruiter"),jobSimulationController.deleteTask);
 
 //INTERNSHIP ROUTES
 router.post('/create-internship',authMiddleware,
 authorizeRole("recruiter"),internshipController.createInternshipPost);
 
-router.put('/edit-internship/:id',authMiddleware,
+router.put('/edit-internship/:internshipId',authMiddleware,
 authorizeRole("recruiter"),internshipController.editInternshipPost);
 
-router.delete('delete-internship/:id',authMiddleware,
+router.delete('delete-internship/:internshipId',authMiddleware,
 authorizeRole("recruiter"),internshipController.deleteInternshipPost);
 
 module.exports=router;
