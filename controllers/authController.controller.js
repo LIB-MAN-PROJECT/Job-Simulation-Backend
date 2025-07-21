@@ -4,42 +4,77 @@ require("dotenv").config()
 const User = require("../models/userModel.model");
 const Company = require("../models/companyModel.model")
 const { successMessage, errorMessage } = require("../utils/responseHandler.util");
+const uniqueCompanyId = require("../utils/uniqueCustomIdCheck.util");
+const { uploadFile } = require("../utils/uploadFile.util");
 
 
 
 //signing up
-//cretaing a new user in db
+//creating a new user in db
 
 const signup = async (req, res) => {
     try {
-        const { firstName, lastName, userName, email, password, role, companyName,companyCode,description,website } = req.body
+        const { firstName, lastName, userName, email, password, role,companyCustomId,companyCode,companyName,companyEmail,description,website } = req.body
+
+        // Check user essentials
+        if (!firstName || !lastName || !userName || !email || !password) {
+        return errorMessage(res, 400, "Missing required user fields");
+        }
 
         const userExists = await User.findOne({ userName });
         if (userExists) {
-            // return errorMessage(res, 400, "User already exits");
-            return res.status(400).json({
-                message: "User already exists",
-            });
+        return errorMessage(res, 400, "User already exists");
+            // return res.status(400).json({
+            //     message: "User already exists",
+            // });
         }
         
         const hashedpassword = await bcrypt.hash(password, 10);
 
         let user;
+        let company;
         if (role === "recruiter" ){
-            if(website && description){
+            console.log("customId=",companyCustomId)
+            console.log("companyCode=",companyCode)
+            if(companyCustomId && companyCode){
                 //Check if company exists
-                let company = await Company.findOne({companyName});
+                company = await Company.findOne({companyCustomId});
+                console.log("company=",company)
                 if(company){
                     if(company.companyCode !== companyCode){
                         return errorMessage(res,400,"Invalid Credentials");
                     }
+
+                    //create recruiter
+                    user = await User.create({
+                        firstName,
+                        lastName,
+                        userName,
+                        email,
+                        password: hashedpassword,
+                        role,
+                        companyId: company._id,
+                        companyName: company.companyName,
+                        isVerified: false,
+                    });
+
+                    console.log("User=",user._id);
+                    console.log("user._id");
+                    
                     //add recruiter to company
-                     company.recruiters.push(user._id);
+                    company.recruiters.push(user._id);
                     await company.save();
                 }
-
+                else{
+                    return errorMessage(res,404,"Organization not found.")
+                }
             }
             else{
+                // Required for creating new company
+                if (!companyName || !companyCode || !companyEmail || !description || !website) {
+                return errorMessage(res, 400, "Missing required company fields for recruiter");
+                }
+
                 //creating new company if it doesn't exist
 
                 //checking file existence
@@ -53,28 +88,28 @@ const signup = async (req, res) => {
                 company = await Company.create({
                 companyName,
                 companyCode,
+                companyEmail,
+                companyCustomId: await uniqueCompanyId(),
                 description,
                 logoUrl: uploadedFile.url,
                 logoPublicId: uploadedFile.public_id,
                 website,
                 isVerified:false
                 });
+
+                //create recruiter
+                user = await User.create({
+                    firstName,
+                    lastName,
+                    userName,
+                    email,
+                    password: hashedpassword,
+                    role,
+                    companyId: company._id,
+                    companyName,
+                    isVerified: false,
+                });
             }
-
-            //create recruiter
-            user = await User.create({
-                firstName,
-                lastName,
-                userName,
-                email,
-                password: hashedpassword,
-                role,
-                companyId: company._id,
-                companyName,
-                isVerified: false,
-            });
-
-           
         }else{
             // create user or admin
             user = await User.create({
@@ -95,7 +130,8 @@ const signup = async (req, res) => {
                 userName,
                 email,
                 companyName,
-                role
+                role,
+                companyCustomId
             }
         }else{
             registeredUser = {
