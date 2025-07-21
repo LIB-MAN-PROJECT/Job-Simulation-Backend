@@ -42,10 +42,7 @@ const startServer = async () => {
 }
 
 app.use((req,res,next)=>{
-    res.status(404).json({
-        title:"Page Not Found",
-        message:"Sorry,we couldn't find what you're looking for"
-    });
+    res.status(404).send("Sorry,we couldn't find what you're looking for");
 });
 
 app.use(errorHandler);
