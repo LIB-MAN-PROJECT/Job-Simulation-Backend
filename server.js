@@ -23,7 +23,7 @@ app.use(cors());
 //TODO: Remove Middleware Logging statements
 //TODO: Logout controller
 app.get("/",async(req,res) => {
-    res.send(`Welcome`);
+    res.send(`Welcome To The Job Simulation API`);
 });
 app.use('/api/auth',registrationRoutes);
 app.use('/api/user',userRoutes);
@@ -42,7 +42,7 @@ const startServer = async () => {
 }
 
 app.use((req,res,next)=>{
-    res.status(400).render("404",{
+    res.status(404).json({
         title:"Page Not Found",
         message:"Sorry,we couldn't find what you're looking for"
     });
@@ -50,4 +50,3 @@ app.use((req,res,next)=>{
 
 app.use(errorHandler);
 startServer();
-
