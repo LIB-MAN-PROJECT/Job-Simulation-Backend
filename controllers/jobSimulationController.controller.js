@@ -54,10 +54,10 @@ const createJobSim = async (req, res) => {
 const editJobSimById = async (req, res) => {
     const { title, description, field, level, duration, isHiring, isPublished } = req.body;
     console.log("req.user", req.user);
-    const { id } = req.params;
+    const { simulationId } = req.params;
 
     try {
-        const jobSim = await JobSim.findById(id);
+        const jobSim = await JobSim.findById(simulationId);
 
         if (!jobSim) {
             return errorMessage(res, 404, "Job Simulation not found");
@@ -119,10 +119,10 @@ const editJobSimById = async (req, res) => {
 }
 
 const deleteJobSimById = async (req, res) => {
-    const { id } = req.params;
+    const { simulationId } = req.params;
 
     try {
-        const jobSim = await JobSim.findByIdAndDelete(id);
+        const jobSim = await JobSim.findByIdAndDelete(simulationId);
         if (!jobSim){
              return errorMessage(res, 404, "Job Simulation not found");
         }
@@ -135,7 +135,7 @@ const deleteJobSimById = async (req, res) => {
 
 //task-related logic
 const createTask = async(req,res)=>{
-    const {id}= req.params;
+    const {simulationId}= req.params;
     const {title,content,resources}=req.body
     try {
         const jobSim = await JobSim.findById(id);
@@ -143,7 +143,7 @@ const createTask = async(req,res)=>{
         if(!jobSim){
             return errorMessage(res,404,"Job simulation not found")
         }
-        const completionScore = await updateTaskScores(id);
+        const completionScore = await updateTaskScores(simulationId);
         //create task
         const task = await Task.create({
             simulationId:id,
@@ -165,7 +165,7 @@ const createTask = async(req,res)=>{
 }
 
 const editTask= async(req,res)=>{
-    const{id}=req.params;
+    const{taskId}=req.params;
     const{title,content,resources}=req.body
     
     try {
@@ -174,7 +174,7 @@ const editTask= async(req,res)=>{
         if(content) updates.content = content;
         if(resources) updates.resources= resources;
 
-        const updatedTask = await Task.findByIdAndUpdate(id,{$set:updates},{new:true});
+        const updatedTask = await Task.findByIdAndUpdate(taskId,{$set:updates},{new:true});
 
         if(!updatedTask){
             errorMessage(res,404,"Task not found");
@@ -187,11 +187,11 @@ const editTask= async(req,res)=>{
 }
 
 const deleteTask = async(req,res)=>{
-    const {id}=req.params;
+    const {taskId}=req.params;
 //TODO: prevent deletion if task is attempted by user
     try {
-        const task=Task.findByIdAndDelete(id);
-        await updateTaskScores(id)
+        const task=Task.findByIdAndDelete(taskId);
+        await updateTaskScores(taskId)
         if (!task){
            return errorMessage(res,404,"Task not found");
         }
@@ -216,9 +216,9 @@ const viewAllJobSims = async(req,res)=>{
 };
 
 const viewJobSimsById = async(req,res)=>{
-    const {id} = req.params;
+    const {simulationId} = req.params;
     try {
-        const jobSims = await JobSim.findById(id).populate("tasks");
+        const jobSims = await JobSim.findById(simulationId).populate("tasks");
 
         if(!jobSims){
             return errorMessage(res,404,"Job Simulation not found");
