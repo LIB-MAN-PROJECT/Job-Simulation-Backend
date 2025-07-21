@@ -5,7 +5,7 @@ const getDataFile =(fileName) =>{
     return path.join(__dirname,"../localdata",fileName);
 }
 
-console.log("localData File",getDataFile("simulations.json"));
+// console.log("localData File",getDataFile("simulations.json"));
 
 //reading data
 async function readData(fileName){
