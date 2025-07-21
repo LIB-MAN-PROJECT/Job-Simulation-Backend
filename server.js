@@ -42,9 +42,10 @@ const startServer = async () => {
 }
 
 app.use((req,res,next)=>{
-    const error = new Error("Sorry,we couldn't find what you're looking for");
-    error.status = 404;
-    next(error);
+    res.status(400).render("404",{
+        title:"Page Not Found",
+        message:"Sorry,we couldn't find what you're looking for"
+    });
 });
 
 app.use(errorHandler);
