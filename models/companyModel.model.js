@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 //only for recruiters
 const companySchema = new mongoose.Schema({
-  verifiedId:{type:String},
+  companyCustomId:{type:String, unique:true},
   companyName: { type: String, required: true },
   companyCode: {type:String},
   companyEmail:{type:String,unique:true},
@@ -12,6 +12,6 @@ const companySchema = new mongoose.Schema({
   website: { type: String },
   recruiters: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   isVerified: {type:Boolean, default:false} //not needed in the frontend
-}, { timestamps: true });
+}, { timestamps: true }); 
 
 module.exports = mongoose.model("company",companySchema);
