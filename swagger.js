@@ -5,7 +5,7 @@ const doc={
         title: "Job Simulation Management API",
         description: "An API for managing Job Simulations and Internship for a variety of different categories of users"
     },
-    host: "https://job-simulation-backend-3e6w.onrender.com",
+    host: "job-simulation-backend-3e6w.onrender.com",
     schemes:["https"],
     components: {
     securitySchemes: {
