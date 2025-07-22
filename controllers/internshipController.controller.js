@@ -2,9 +2,7 @@ const { InternshipPost,InternshipApplication } = require("../models/internshipMo
 const { errorMessage, successMessage } = require("../utils/responseHandler.util");
 const { readData, WriteData } = require("../utils/fileHandler.util");
 const { uploadFile, deleteFile } = require("../utils/uploadFile.util");
-
-
-
+const User = require("../models/userModel.model");
 
 //Internship Post logic
 const createInternshipPost = async (req, res) => {
@@ -103,6 +101,15 @@ const applyForInternship = async (req, res) => {
         const internshipPost = await InternshipPost.findById(internshipId);
         if (!internshipPost) return errorMessage(res, 404, "Internship Post not found");
 
+        const user= await User.findById(req.user.id);
+        // if(!user){
+        //     return errorMessage(res,404,"User not found");
+        // }
+
+        const alreadyApplied = await InternshipApplication.findOne({ userId: req.user.id, internshipId });
+        if (alreadyApplied) {
+        return errorMessage(res, 400, "You've already applied for this internship");
+        }
         console.log("Internship ID=:",internshipId);
          //checking file existence
         if(!req.file || !req.file.path){
@@ -127,6 +134,9 @@ const applyForInternship = async (req, res) => {
 
         internshipPost.applicants.push(req.user.id);
         await internshipPost.save();
+
+        user.internshipApplications.push(internshipId);
+        await user.save();
 
         return successMessage(res,200,"Applied successfully",internshipApplication);
 
