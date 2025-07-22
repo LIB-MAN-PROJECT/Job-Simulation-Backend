@@ -67,6 +67,12 @@ const submitTask= async(req,res)=>{
             isSubmitted:true,
         });
 
+        //link submissions to enrollment
+        if(!Array.isArray(enrolled.taskSubmissions)){
+            enrolled.taskSubmissions=[];
+        }
+        enrolled.taskSubmissions.push(taskSubmission._id);
+
         //Recalculate progress
         const totalTasks=await Task.countDocuments({simulationId}); //Total tasks in simulation
         const submittedTaskcount= await TaskSubmission.countDocuments({
@@ -112,26 +118,27 @@ const editSubmittedTask=async(req,res)=>{
         const enrolled= await Enroll.findOne({userId:req.user.id,simulationId});
         if (!enrolled) return errorMessage(res,400,"You aren't enrolled in this simulation");
 
-
-        const submittedTask= await TaskSubmission.findOne({userId:req.user.id,simulationId,taskId});
+        //validating submitted task
+        const submittedTask= await TaskSubmission.findOne({_id:taskSubmissionId,userId:req.user.id,simulationId,taskId});
         if(!submittedTask){
         return errorMessage(res,404,"Submitted Task not found");
         }
         
         //Ensuring submission belongs to user
-        if (submittedTask.userId.toString() !== req.user.id.toString()) return errorMessage(res,403,"Invalid editing: You didn't make this submission");
+        if (submittedTask.userId.toString() !== req.user.id.toString()) return errorMessage(res,403,"You didn't make this submission");
 
         //Ensuring the simulations match
         if(submittedTask.simulationId.toString()!== simulationId) return errorMessage(res,400,"Submission doesn't belong to thus simulation");
 
         //checking file existence
-        if(!req.file || !req.file.path){
-        console.log("No valid file found");
-        return errorMessage(res, 400, "File not provided or invalid");
-        }
+        // if(!req.file?.path){
+        // console.log("No valid file found");
+        // return errorMessage(res, 400, "File not provided or invalid");
+        // }
         
         const updates={}
         updates.submittedAt = Date.now();
+        
         if (req.file?.path){
         if(submittedTask.submissionPublicId){
             await deleteFile(submittedTask.submissionPublicId);
@@ -153,4 +160,64 @@ const editSubmittedTask=async(req,res)=>{
     }
 }
 
-module.exports={submitTask,editSubmittedTask}
+const deleteSubmittedTask = async(req,res)=>{
+    const {simulationId,taskId,taskSubmissionId} =req.params;
+
+    try {
+        //checking user enrollment
+        const enrolled= await Enroll.findOne({userId:req.user.id,simulationId});
+        console.log("Enrollment Document",enrolled);
+        if (!enrolled) return errorMessage(res,400,"You aren't enrolled in this simulation");
+
+        //validating submitted task
+        const submittedTask= await TaskSubmission.findOne({_id:taskSubmissionId,userId:req.user.id,simulationId,taskId});
+        if(!submittedTask){
+        return errorMessage(res,404,"Submitted Task not found");
+        }
+        
+        //Ensuring submission belongs to user
+        if (submittedTask.userId.toString() !== req.user.id.toString()) return errorMessage(res,403,"You didn't make this submission");
+
+        //deleting file
+        if(submittedTask.submissionPublicId){
+            await deleteFile(submittedTask.submissionPublicId);
+        }
+        
+        // remove document
+        const deletedtask = await TaskSubmission.findOneAndDelete({taskSubmissionId});
+
+        //removing taskSubmissionId from enrollment.
+        enrolled.taskSubmissions = enrolled.taskSubmissions.filter(id => id.toString() !== taskSubmissionId);
+
+
+        //Recalculating progress Score
+        const totalTasks= await Task.countDocuments({simulationId}); //counting total tasks in the simulation document
+        const submittedTaskcount = enrolled.taskSubmissions.length //total number of submitted tasks
+
+        //Progress
+        const progressPercent = totalTasks > 0 
+      ? Math.floor((submittedTaskcount / totalTasks) * 100)
+      : 0;
+
+                //update user's enrollment progress
+        enrolled.progress=progressPercent;
+
+        //Mark completion if all tasks are submitted
+        if(progressPercent < 96){
+            enrolled.completedAt=null;
+            enrolled.isReadyForReview =false;
+            enrolled.isReviewed=false;
+            enrolled.reviewState="Pending";
+        }
+        //saving updates
+        await enrolled.save()
+
+        return successMessage(res,200,"Submission deleted successfully",deletedtask);
+
+    } catch (error) {
+        console.error("Task submission deletion error:",error);
+        return errorMessage(res,500,"Internal Server Error",error);
+    }
+}
+
+module.exports={submitTask,editSubmittedTask,deleteSubmittedTask}
