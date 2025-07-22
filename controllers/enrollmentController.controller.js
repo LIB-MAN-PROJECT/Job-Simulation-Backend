@@ -17,17 +17,24 @@ const enrollInJobSim = async(req,res) => {
         const alreadyEnrolled= await Enroll.findOne({userId:req.user.id,simulationId});
         if (alreadyEnrolled) return errorMessage(res,400,"You're already enrolled in this simulation");
 
+        const user = await User.findById(req.user.id);
+        
         const enroll = await Enroll.create({
             userId: req.user.id,
             firstName: req.user.firstName,
             lastName: req.user.lastName,
-            simulationId: id,
+            simulationId,
             progress: 0,
             completedAt: null
         });
 
-        jobSim.participants.push(req.user.id);
-        await jobSim.save();
+        if (!jobSim.participants.includes(req.user.id)){
+            jobSim.participants.push(req.user.id);
+            await jobSim.save();
+        }
+
+        user.enrolledSimulations.push(simulationId);
+        await user.save();
 
         return successMessage(res,200,`Successfully enrolled in the ${jobSim.title} simulation`,enroll);
     } catch (error) {
