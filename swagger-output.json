@@ -5,7 +5,7 @@
     "description": "An API for managing Job Simulations and Internship for a variety of different categories of users",
     "version": "1.0.0"
   },
-  "host": "https://job-simulation-backend-3e6w.onrender.com",
+  "host": "job-simulation-backend-3e6w.onrender.com",
   "basePath": "/",
   "schemes": [
     "https"
@@ -186,12 +186,12 @@
         }
       }
     },
-    "/api/user/simulation/{id}/enroll": {
+    "/api/user/simulation/{simulationId}/enroll": {
       "post": {
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "simulationId",
             "in": "path",
             "required": true,
             "type": "string"
@@ -238,8 +238,43 @@
         }
       }
     },
-    "/api/user/simulation/{simulationId}/task/{taskId}/submission/{taskSubmissonId}": {
+    "/api/user/simulation/{simulationId}/task/{taskId}/submission/{taskSubmissonId}/edit-submission": {
       "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "simulationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "taskId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "taskSubmissonId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/user/simulation/{simulationId}/task/{taskId}/submission/{taskSubmissonId}/delete-submission": {
+      "delete": {
         "description": "",
         "parameters": [
           {
