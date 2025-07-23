@@ -7,9 +7,7 @@ const {Task,TaskSubmission}=require("../models/taskModel.model");
 const Enroll = require("../models/enrollmentModel.model");
 const Certificate = require("../models/certificateModel.model");
 const generateCertificate = require("../utils/generateCertificate.util");
-//Permissions
-//View created sims and internsip posts 
-//request new codes and custom IDs
+const { InternshipPost,InternshipApplication } = require("../models/internshipModel.model");
 
 
 // Dashboard Overview	Quick stats on simulations, applicants, tasks
@@ -22,6 +20,48 @@ const generateCertificate = require("../utils/generateCertificate.util");
 // Notification Center	Alerts for new applications or task submissions
 
 //ADDDDDDD ANALYTICSSSSSS
+const getRecruiterAnalytics = async (req,res) =>{
+    const companyId = req.user.companyId
+ try {
+    // Count simulations
+    const totalSimulations = await JobSim.countDocuments({ companyId });
+
+    // Get simulation IDs for other lookups
+    const simulationIds = await JobSim.find({ companyId }).distinct("_id");
+
+    // Count users enrolled in simulations
+    const enrolledUsersCount = await Enroll.countDocuments({ simulationId: { $in: simulationIds } });
+
+    // Count internships
+    const totalInternships = await InternshipPost.countDocuments({ companyId });
+
+    // Get internship IDs to count applicants
+    const internshipIds = await InternshipApplication.find({ companyId }).distinct("_id");
+
+    // Count internship applicants
+    const internshipApplicantsCount = await InternshipApplication.countDocuments({
+      internshipId: { $in: internshipIds }
+    });
+
+    // Count certificates issued
+    const totalCertificates = await Certificate.countDocuments({ simulationId: { $in: simulationIds } });
+
+    return successMessage(res, 200, "Company stats retrieved successfully", {
+      totalSimulations,
+      enrolledUsersCount,
+      totalInternships,
+      internshipApplicantsCount,
+      totalCertificates
+    });
+  } catch (error) {
+    console.error("Error fetching company stats:", error);
+    return errorMessage(res, 500, "Internal Server Error", error);
+  }
+};
+
+//Permissions
+//View created sims and internsip posts 
+//request new codes and custom IDs
 const viewAllCompletedTasks = async(req,res)=>{
     try {
         const enrollments=await Enroll.find({isReadyForReview:true,reviewState:'Pending'})
@@ -110,4 +150,4 @@ const generateCertForEnrollment = async (req, res) => {
   }
 };
 
-module.exports={viewAllCompletedTasks,reviewEnrollment,generateCertForEnrollment}
+module.exports={viewAllCompletedTasks,reviewEnrollment,generateCertForEnrollment,getRecruiterAnalytics}
