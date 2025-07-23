@@ -23,7 +23,7 @@ const getUserProfile = async (req, res) => {
 
     // Only fetch selected safe fields
     const user = await User.findById(userId).select(
-      "firstName lastName email phone role createdAt"
+      "firstName lastName email phone password role createdAt"
     );
 
     if (!user) {
