@@ -27,6 +27,6 @@ const internshipApplicationSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 module.exports = {
-    InternshipPost: mongoose.model("internshipPost", internshipPostSchema),
-    InternshipApplication: mongoose.model("internshipApplication", internshipApplicationSchema)
+    InternshipPost: mongoose.model("InternshipPost", internshipPostSchema),
+    InternshipApplication: mongoose.model("InternshipApplication", internshipApplicationSchema)
 }
