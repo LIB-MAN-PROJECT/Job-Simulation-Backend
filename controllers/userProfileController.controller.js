@@ -13,6 +13,26 @@ const Enroll = require("../models/enrollmentModel.model");
 const User = require("../models/userModel.model");
 const Certificate = require("../models/certificateModel.model");
 
+const getUserStats = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    // Count total simulations enrolled
+    const totalSimulationsEnrolled = await Enroll.countDocuments({ userId });
+
+    // Count total internship applications
+    const totalInternshipsApplied = await InternshipApplication.countDocuments({ userId });
+
+    return successMessage(res, 200, "User stats retrieved successfully", {
+      totalSimulationsEnrolled,
+      totalInternshipsApplied
+    });
+  } catch (error) {
+    console.error("Error fetching user stats:", error);
+    return errorMessage(res, 500, "Internal Server Error", error);
+  }
+};
+
 /**
  * GET Req
  * View logged-in user's profile data
@@ -96,4 +116,4 @@ const getCertificates = async(req,res)=>{
 }
 // Review Feedback	View recruiter responses on tasks or simulations
 
-module.exports = {getUserProfile,getAppliedInternships,getCertificates,getEnrolledSimulations};
+module.exports = {getUserProfile,getAppliedInternships,getCertificates,getEnrolledSimulations,getUserStats};
