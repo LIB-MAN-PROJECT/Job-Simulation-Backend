@@ -136,9 +136,9 @@ const deleteJobSimById = async (req, res) => {
 //task-related logic
 const createTask = async(req,res)=>{
     const {simulationId}= req.params;
-    const {title,content,resources}=req.body
+    const {taskNumber,title,content,resources}=req.body
     try {
-        const jobSim = await JobSim.findById(id);
+        const jobSim = await JobSim.findById(simulationId);
 
         if(!jobSim){
             return errorMessage(res,404,"Job simulation not found")
@@ -146,11 +146,12 @@ const createTask = async(req,res)=>{
         const completionScore = await updateTaskScores(simulationId);
         //create task
         const task = await Task.create({
-            simulationId:id,
+            taskNumber,
+            simulationId,
             title,
             content,
-            completionScore,
-            resources
+            resources,
+            completionScore
         });
 
         //add task to simulation document
