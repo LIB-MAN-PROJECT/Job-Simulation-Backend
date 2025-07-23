@@ -4,9 +4,11 @@ const mongoose = require("mongoose");
 //TODO: Include file uploads for tasks
 const taskSchema = new mongoose.Schema({
   simulationId: { type: mongoose.Schema.Types.ObjectId, ref: 'JobSimulation', required: true },
+  taskNumber: {type:Number},
   title: { type: String, required: true },
   content: { type: String },//fileURL or file
   completionScore: { type: Number},
+  isCompleted: {type:Boolean},
   resources: [{ type: String }] // URLs
 }, { timestamps: true });
 
@@ -27,5 +29,5 @@ taskSubmissionSchema.index({ userId: 1, taskId: 1 }, { unique: true });
 
 module.exports = {
   Task: mongoose.model("Tasks", taskSchema),
-  TaskSubmission: mongoose.model("tasksubmission", taskSubmissionSchema)
+  TaskSubmission: mongoose.model("TaskSubmission", taskSubmissionSchema)
 }
