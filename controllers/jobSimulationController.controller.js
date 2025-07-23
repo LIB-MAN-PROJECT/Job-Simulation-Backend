@@ -216,21 +216,37 @@ const viewAllJobSims = async(req,res)=>{
     }
 };
 
-const viewJobSimsById = async(req,res)=>{
-    const {simulationId} = req.params;
-    try {
-        const jobSims = await JobSim.findById(simulationId).populate("tasks");
+const injectCompletionMap =require("../utils/injectCompletionStatusMultiple.util")
 
-        if(!jobSims){
-            return errorMessage(res,404,"Job Simulation not found");
-        }
+const viewJobSimsById = async (req, res) => {
+  const { simulationId } = req.params;
+  const userId = req.user?.id;
 
-        return successMessage(res,200,"Job Simulation retrieved successfully",jobSims);
-    } catch (error) {
-        console.log("Getting All Sims error",error);
-        console.error("Getting All Sims error",error);
-        return errorMessage(res,500,"Internal Server Error",error);
+  if (!userId) {
+    return errorMessage(res, 401, "Unauthorized: Missing user context");
+  }
+
+  try {
+    const jobSims = await JobSim.findById(simulationId).populate("tasks").lean();
+    if (!jobSims) {
+      return errorMessage(res, 404, "Job Simulation not found");
     }
+
+    const submissions = await TaskSubmission.find({
+      userId,
+      simulationId,
+      isSubmitted: true
+    }).select("taskId").lean();
+
+    const completedTaskIds = new Set(submissions.map(sub => sub.taskId.toString()));
+
+    jobSims.tasks = injectCompletionMap(jobSims.tasks, completedTaskIds);
+
+    return successMessage(res, 200, "Job Simulation retrieved successfully", jobSims);
+  } catch (error) {
+    console.error("Getting Job Simulation error:", error);
+    return errorMessage(res, 500, "Internal Server Error", error);
+  }
 };
 
 //TODO: search and filter sims based on specific metrics
