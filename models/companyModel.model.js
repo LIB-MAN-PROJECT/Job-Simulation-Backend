@@ -14,4 +14,4 @@ const companySchema = new mongoose.Schema({
   isVerified: {type:Boolean, default:false} //not needed in the frontend
 }, { timestamps: true }); 
 
-module.exports = mongoose.model("company",companySchema);
+module.exports = mongoose.model("Company",companySchema);
