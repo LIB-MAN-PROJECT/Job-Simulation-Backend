@@ -216,7 +216,7 @@ const viewAllJobSims = async(req,res)=>{
     }
 };
 
-const injectCompletionMap =require("../utils/injectCompletionStatusMultiple.util")
+const injectCompletionMap =require("../utils/dynamicStatusInjectionMultiple");
 
 const viewJobSimsById = async (req, res) => {
   const { simulationId } = req.params;
