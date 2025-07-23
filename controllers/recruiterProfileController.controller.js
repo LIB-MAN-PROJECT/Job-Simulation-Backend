@@ -2,6 +2,7 @@ const JobSim = require("../models/jobSimulation.model");
 const { errorMessage, successMessage } = require("../utils/responseHandler.util");
 const { readData, WriteData } = require("../utils/fileHandler.util");
 const { uploadFile, deleteFile } = require("../utils/uploadFile.util");
+const User=require("../models/userModel.model");
 const {Task,TaskSubmission}=require("../models/taskModel.model");
 const Enroll = require("../models/enrollmentModel.model");
 const Certificate = require("../models/certificateModel.model");
@@ -20,6 +21,7 @@ const generateCertificate = require("../utils/generateCertificate.util");
 // Recruiter Profile Settings	Update name, company info, logo, contact details
 // Notification Center	Alerts for new applications or task submissions
 
+//ADDDDDDD ANALYTICSSSSSS
 const viewAllCompletedTasks = async(req,res)=>{
     try {
         const enrollments=await Enroll.find({isReadyForReview:true,reviewState:'Pending'})
@@ -45,20 +47,20 @@ const viewAllCompletedTasks = async(req,res)=>{
 
 const reviewEnrollment = async(req,res)=>{
     const {enrollmentId} = req.params;
-    const {reviewState,reviewFeedback}=req.body
+    const {feedbackState,feedback}=req.body
     
     try {
         const enrollment = await Enroll.findById(enrollmentId);
         if(!enrollment) return errorMessage(res,404,"Enrollment not found");
 
         enrollment.isReviewed=true;
-        enrollment.reviewState=reviewState;
+        enrollment.feedbackState=feedbackState;
         enrollment.reviewedAt=new Date();
-        enrollment.reviewFeedback = reviewFeedback|| '';
+        enrollment.feedback = feedback|| '';
 
         //generate certificate if reviewState is accepted
         await enrollment.save()
-        return successMessage(res,200,`Tasks marks as "${reviewState}"`,enrollment);
+        return successMessage(res,200,`Tasks marks as "${feedbackState}"`,enrollment);
     } catch (error) {
         console.error('Enrollment review error:', error);
         return errorMessage(res, 500, 'Internal Server Error',error);
@@ -77,7 +79,7 @@ const generateCertForEnrollment = async (req, res) => {
   try {
     const enrollment = await Enroll.findById(enrollmentId).populate('userId simulationId');
     if (!enrollment) return errorMessage(res, 404, 'Enrollment not found');
-    if (enrollment.reviewState !== 'Accepted') {
+    if (enrollment.feedbackState !== 'Accepted') {
       return errorMessage(res, 400, 'Certificate can only be issued for accepted enrollments');
     }
 
