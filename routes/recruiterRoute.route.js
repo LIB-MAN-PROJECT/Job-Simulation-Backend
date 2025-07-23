@@ -86,4 +86,7 @@ router.post('/enrollments/:enrollmentId/review',authMiddleware,authorizeRole("re
 
 router.post('/certificates/enrollments/:enrollmentId/generate',authMiddleware,authorizeRole("recruiter"),recruiterProfile.generateCertForEnrollment);
 
+//PROFILE
+router.get('/profile/overview',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getRecruiterAnalytics);
+
 module.exports=router;
