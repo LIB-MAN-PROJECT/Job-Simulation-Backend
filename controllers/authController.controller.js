@@ -21,14 +21,24 @@ const signup = async (req, res) => {
         return errorMessage(res, 400, "Missing required user fields");
         }
 
-        const userExists = await User.findOne({ userName,email });
+        const userExists = await User.findOne({ userName });
         if (userExists) {
         return errorMessage(res, 400, "User credentials already exists");
             // return res.status(400).json({
             //     message: "User already exists",
             // });
         }
+
+        const emailExists = await User.findOne({ email });
+        if (emailExists) {
+        return errorMessage(res, 400, "User credentials already exists");
+            // return res.status(400).json({
+            //     message: "User already exists",
+            // });
+        }
         
+      
+
         const hashedpassword = await bcrypt.hash(password, 10);
 
         let user;
@@ -47,12 +57,12 @@ const signup = async (req, res) => {
 
                     //create recruiter
                     user = await User.create({
-                        firstName,
-                        lastName,
-                        userName,
-                        email,
+                        firstName:firstName.trim(),
+                        lastName:lastName.trim(),
+                        userName:userName.trim(),
+                        email:email.toLowerCase().trim(),
                         password: hashedpassword,
-                        role,
+                        role:role.trim(),
                         companyId: company._id,
                         companyName: company.companyName,
                         isVerified: false,
@@ -75,6 +85,14 @@ const signup = async (req, res) => {
                 return errorMessage(res, 400, "Missing required company fields for recruiter");
                 }
 
+                  const companyNameExists =await Company.findOne({companyName});
+                if (companyNameExists) return errorMessage(res,400,"Organizational Name exists");
+                
+                  const companyEmailExists =await Company.findOne({companyEmail});
+                if (companyEmailExists) return errorMessage(res,400,"Organizational Mail exists");
+
+                const companyWebsite =await Company.findOne({website});
+                if (companyWebsite) return errorMessage(res,400,"Organizational Website exists");
                 //creating new company if it doesn't exist
 
                 //checking file existence
