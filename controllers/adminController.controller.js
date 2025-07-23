@@ -1,16 +1,96 @@
 const User = require("../models/userModel.model");
 const Company = require("../models/companyModel.model");
 const { errorMessage, successMessage } = require("../utils/responseHandler.util");
-
+const Enroll = require("../models/enrollmentModel.model");
+const Certificate = require("../models/certificateModel.model");
+const JobSim = require("../models/jobSimulation.model");
+const { InternshipPost,InternshipApplication } = require("../models/internshipModel.model");
 
 // System Dashboard	Platform-wide stats: users, recruiters, applications
 // Manage Users & Recruiters	Edit, ban, activate, or delete accounts
+// All Users
+// All recruiters
+//All companies
 // View All Simulations	Monitor and audit all recruiter-created content
 // Role-Based Access Control	Set permissions for recruiters, users, sub-admins
 // View & Export Data	Retrieve applications, tasks, progress data
 // Moderation Logs	Record admin actions like deletions or approvals
 // Admin Profile Settings	Manage account info and notification preferences
 // Notification Management	Send platform-wide or role-based alerts
+
+const getAppAnalytics = async (req, res) => {
+  try {
+    const totalUsers = await User.countDocuments();
+    if (totalUsers === 0) return errorMessage(res, 404, "No users found");
+
+    const totalJobSims = await JobSim.countDocuments();
+    if (totalJobSims === 0) return errorMessage(res, 404, "No job simulations found");
+
+    const totalCompanies = await Company.countDocuments();
+    if (totalCompanies === 0) return errorMessage(res, 404, "No companies using the service");
+
+    const totalInternships = await InternshipPost.countDocuments();
+    if (totalInternships === 0) return errorMessage(res, 404, "No internships posted");
+
+    const totalInternshipApplications = await InternshipApplication.countDocuments();
+    if (totalInternshipApplications === 0) return errorMessage(res, 404, "No internship applications found");
+
+    return successMessage(res, 200, "Application analytics retrieved successfully", {
+      totalUsers,
+      totalJobSims,
+      totalCompanies,
+      totalInternships,
+      totalInternshipApplications
+    });
+  } catch (error) {
+    console.error("Analytics Error", error);
+    return errorMessage(res, 500, "Internal Server Error", error);
+  }
+};
+
+
+const getStudents = async (req, res) => {
+  try {
+    const students = await User.find({ role: "student" }).lean();
+    if (!students || students.length === 0) {
+      return errorMessage(res, 404, "No students found");
+    }
+
+    return successMessage(res, 200, "Students retrieved successfully", students);
+  } catch (error) {
+    console.error("Analytics Error (getStudents):", error);
+    return errorMessage(res, 500, "Internal Server Error", error);
+  }
+};
+
+const getRecruiters = async (req, res) => {
+  try {
+    const recruiters = await User.find({ role: "recruiter" }).lean();
+    if (!recruiters || recruiters.length === 0) {
+      return errorMessage(res, 404, "No recruiters found");
+    }
+
+    return successMessage(res, 200, "Recruiters retrieved successfully", recruiters);
+  } catch (error) {
+    console.error("Analytics Error (getRecruiters):", error);
+    return errorMessage(res, 500, "Internal Server Error", error);
+  }
+};
+
+const getCompanies = async (req, res) => {
+  try {
+    const companies = await Company.find().lean();
+    if (!companies || companies.length === 0) {
+      return errorMessage(res, 404, "No companies found");
+    }
+
+    return successMessage(res, 200, "Companies retrieved successfully", companies);
+  } catch (error) {
+    console.error("Analytics Error (getCompanies):", error);
+    return errorMessage(res, 500, "Internal Server Error", error);
+  }
+};
+
 
 const verifyCompany = async(req,res) =>{
     const{companyId}= req.params
@@ -123,4 +203,4 @@ const unverifyRecruiter = async(req,res)=>{
     }
 }
 
-module.exports = {verifyRecruiter,unverifyRecruiter,verifyCompany,unverifyCompany}
+module.exports = {verifyRecruiter,unverifyRecruiter,verifyCompany,unverifyCompany,getAppAnalytics,getCompanies,getStudents,getRecruiters}
