@@ -17,4 +17,4 @@ const jobSimulationSchema = new mongoose.Schema({
   isPublished: { type: Boolean, default: false }
 }, { timestamps: true });
 
-module.exports = mongoose.model("jobSimulation",jobSimulationSchema);
+module.exports = mongoose.model("JobSimulation",jobSimulationSchema);
