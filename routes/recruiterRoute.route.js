@@ -3,8 +3,8 @@ const jobSimulationController = require("../controllers/jobSimulationController.
 const internshipController=require("../controllers/internshipController.controller");
 const companyController= require("../controllers/companyController.controller");
 const { authMiddleware,authorizeRole,allowedRoles } = require("../middleware/authMiddleware.middleware");
-const {uploadImage,uploadDocument}= require("../config/fileUpload.config")
-
+const {uploadImage,uploadDocument}= require("../config/fileUpload.config");
+const  recruiterProfile= require("../controllers/recruiterProfileController.controller");
 
 const router = Router();
 
@@ -76,7 +76,14 @@ authorizeRole("recruiter"),internshipController.createInternshipPost);
 router.put('/edit-internship/:internshipId',authMiddleware,
 authorizeRole("recruiter"),internshipController.editInternshipPost);
 
-router.delete('delete-internship/:internshipId',authMiddleware,
+router.delete('/delete-internship/:internshipId',authMiddleware,
 authorizeRole("recruiter"),internshipController.deleteInternshipPost);
+
+//ENROLLMENT
+router.get('/enrollments/get-completed',authMiddleware,authorizeRole("recruiter"),recruiterProfile.viewAllCompletedTasks);
+
+router.post('/enrollments/:enrollmentId/review',authMiddleware,authorizeRole("recruiter"),recruiterProfile.reviewEnrollment);
+
+router.post('/certificates/enrollments/:enrollmentId/generate',authMiddleware,authorizeRole("recruiter"),recruiterProfile.generateCertForEnrollment);
 
 module.exports=router;
