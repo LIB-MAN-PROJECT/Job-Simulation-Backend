@@ -2,6 +2,16 @@ const User = require("../models/userModel.model");
 const Company = require("../models/companyModel.model");
 const { errorMessage, successMessage } = require("../utils/responseHandler.util");
 
+
+// System Dashboard	Platform-wide stats: users, recruiters, applications
+// Manage Users & Recruiters	Edit, ban, activate, or delete accounts
+// View All Simulations	Monitor and audit all recruiter-created content
+// Role-Based Access Control	Set permissions for recruiters, users, sub-admins
+// View & Export Data	Retrieve applications, tasks, progress data
+// Moderation Logs	Record admin actions like deletions or approvals
+// Admin Profile Settings	Manage account info and notification preferences
+// Notification Management	Send platform-wide or role-based alerts
+
 const verifyCompany = async(req,res) =>{
     const{companyId}= req.params
 
