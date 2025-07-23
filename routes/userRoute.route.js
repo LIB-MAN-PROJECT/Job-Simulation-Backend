@@ -4,6 +4,7 @@ const jobSimulationController= require("../controllers/jobSimulationController.c
 const enrollmentController = require("../controllers/enrollmentController.controller");
 const { authMiddleware, authorizeRole } = require("../middleware/authMiddleware.middleware");
 const taskSubmissionController =require("../controllers/taskSubmissionController.controller");
+const userProfileController = require("../controllers/userProfileController.controller");
 const reviewController= require("../controllers/reviewController");
 const { uploadDocument } = require("../config/fileUpload.config");
 const router= Router();
@@ -19,7 +20,7 @@ router.get('/simulations/search',jobSimulationController.searchSimulations);
 router.post('/simulation/:simulationId/enroll',authMiddleware,authorizeRole("student"),enrollmentController.enrollInJobSim);
 
 //Unenroll
-//  router.delete('/simulation/:userid/simulations/:simulationId',enrollmentController.unenrollInJobSim);
+// router.delete('/profile/simulation/:userid/simulations/:simulationId',enrollmentController.unenrollInJobSim);
 
 //Submitting tasks
 router.post('/simulation/:simulationId/task/:taskId/submit-task',authMiddleware,authorizeRole("student"),uploadDocument.single("file"),taskSubmissionController.submitTask);
@@ -43,5 +44,18 @@ router.get('/view-internships/:internshipId',internshipController.viewInternship
 router.post('/view-internships/:internshipId/apply',authMiddleware,authorizeRole("student"),uploadDocument.single("file"),internshipController.applyForInternship);
 
 router.get('/internships/search',internshipController.searchInternships);
+
+
+//USER PROFILE
+
+router.get('/profile/stats',authMiddleware,authorizeRole("student"),userProfileController.getUserStats);
+
+router.get('/profile/account',authMiddleware,authorizeRole("student"),userProfileController.getUserProfile);
+
+router.get('/profile/enrollments',authMiddleware,authorizeRole("student"),userProfileController.getEnrolledSimulations);
+
+router.get('/profile/applications',authMiddleware,authorizeRole("student"),userProfileController.getAppliedInternships);
+
+router.get('/profile/certificates',authMiddleware,authorizeRole("student"),userProfileController.getCertificates);
 
 module.exports = router;
