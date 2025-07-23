@@ -11,7 +11,7 @@ const router= Router();
 //SIMULATIONS
 router.get('/view-all-simulations',jobSimulationController.viewAllJobSims)
 
-router.get('/view-simulations/:simulationId',jobSimulationController.viewJobSimsById);
+router.get('/view-simulations/:simulationId',authMiddleware,jobSimulationController.viewJobSimsById);
 
 router.get('/simulations/search',jobSimulationController.searchSimulations);
 
