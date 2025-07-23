@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 //only for recruiters
 const companySchema = new mongoose.Schema({
-  companyCustomId:{type:String, unique:true},
+  companyCustomId:{type:String},
   companyName: { type: String, required: true },
   companyCode: {type:String},
   companyEmail:{type:String,unique:true},
