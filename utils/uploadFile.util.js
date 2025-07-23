@@ -3,7 +3,6 @@ const cloudinary = require("../config/cloudinary.config");
 const fs=require("fs/promises");
 
 const uploadFile = async(req,filePath,folderName,res) =>{
-    let fileData = null;
     try {
         
         if(!req.file || !req.file.path){
@@ -52,4 +51,45 @@ const deleteFile = async (publicId) => {
     }
 }
 
-module.exports= {uploadFile,deleteFile}
+/**
+ * Uploads a certificate buffer to Cloudinary
+ * @param {Buffer} buffer - The PDF file buffer
+ * @param {string} folder - Cloudinary folder path
+ * @param {string} filename - Desired public filename (without extension)
+ * @returns {Object} - Upload response with public_id, secure_url, etc.
+ */
+const uploadCertificate = async (buffer, folder, filename) => {
+  try {
+    const uploadResult = await cloudinary.uploader.upload_stream(
+      {
+        folder,
+        public_id: filename,
+        resource_type: 'raw', // raw = for PDFs or any file type
+        format: 'pdf'
+      },
+      (error, result) => {
+        if (error) throw error;
+        return result;
+      }
+    );
+
+    // Pipe the buffer manually into the upload stream
+    const stream = require('stream');
+    const readableStream = new stream.PassThrough();
+    readableStream.end(buffer);
+    readableStream.pipe(uploadResult);
+
+    return new Promise((resolve, reject) => {
+      uploadResult.on('finish', resolve);
+      uploadResult.on('error', reject);
+    });
+
+  } catch (err) {
+    console.error('📁 Cloudinary upload failed:', err);
+    throw err;
+  }
+};
+
+
+
+module.exports= {uploadFile,deleteFile,uploadCertificate}
