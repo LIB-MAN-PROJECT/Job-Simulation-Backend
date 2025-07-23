@@ -1,24 +1,38 @@
-const { errorMessage } = require("./responseHandler.util");
+const Task = require("../models/taskModel.model").Task;
 
- const updateTaskScores = async (simulationId) =>{
-    const Task=require("../models/taskModel.model");
-    try {
-        const taskCount= await Task.task.find({simulationId});
-        const totalTasks = taskCount.length
-        
-        if (totalTasks === 0) return;
-    
-        const newScore = Math.floor(100/totalTasks);
-    
-        await Task.task.updateMany({simulationId},{$set:{completionScore: newScore}});
+/**
+ * Calculates and updates task completionScore across all tasks in a simulation.
+ * Assumes all tasks share the same score.
+ *
+ * @param {String} simulationId
+ * @returns {Number} completionScore
+ */
+const updateTaskScores = async (simulationId) => {
+  try {
+    const tasks = await Task.find({ simulationId }); // Fetch tasks by simulation
+    const totalTasks = tasks.length;
 
-        console.log(`Completion score updated to ${newScore} for ${totalTasks} tasks`);
-
-        return newScore;
-    } catch (error) {
-        console.error("Error updating completion scores:", error.message);
-        return errorMessage(res,500,"Internal Server Error",error);
+    if (totalTasks === 0) {
+      console.warn("No tasks found for simulation");
+      return 0;
     }
- }
+    ++totalTasks
+    const newScore = Math.floor(100 / totalTasks);
 
- module.exports= updateTaskScores;
+    await Task.updateMany(
+      { simulationId },
+      { $set: { completionScore: newScore } }
+    );
+
+    console.log(
+      `Completion score updated to ${newScore} for ${totalTasks} tasks`
+    );
+
+    return newScore;
+  } catch (error) {
+    console.error("Error updating completion scores:", error);
+    throw error; // Let the caller handle the error
+  }
+};
+
+module.exports = updateTaskScores;
