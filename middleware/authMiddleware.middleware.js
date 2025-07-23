@@ -12,7 +12,7 @@ const authMiddleware= (req,res,next) =>{
             message: "You need to login!"
         });
     }
-    console.log("AuthHeader",authHeader)
+    // console.log("AuthHeader",authHeader)
 
     const token = authHeader.split(" ")[1];
 
