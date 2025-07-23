@@ -709,6 +709,9 @@
             "schema": {
               "type": "object",
               "properties": {
+                "taskNumber": {
+                  "example": "any"
+                },
                 "title": {
                   "example": "any"
                 },
@@ -887,12 +890,90 @@
         }
       }
     },
-    "/api/recruiterdelete-internship/{internshipId}": {
+    "/api/recruiter/delete-internship/{internshipId}": {
       "delete": {
         "description": "",
         "parameters": [
           {
             "name": "internshipId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/recruiter/enrollments/get-completed": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/recruiter/enrollments/{enrollmentId}/review": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "enrollmentId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "feedbackState": {
+                  "example": "any"
+                },
+                "feedback": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/recruiter/certificates/enrollments/{enrollmentId}/generate": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "enrollmentId",
             "in": "path",
             "required": true,
             "type": "string"
