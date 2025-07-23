@@ -1,12 +1,22 @@
 const Company = require("../models/CompanySchema");
 const cloudinary = require("../utils/cloudinary");
 const fs = require("fs");
+const email = require("../utils/email")
 
 // Create a new company (with logo upload)
 exports.createCompany = async (req, res,next) => {
   try {
-    const { companyName, description, website } = req.body;
+    const { companyName, description, website, } = req.body;
     let logoUrl = "";
+    let logoPublicId = "";
+
+    const user = await User.findById(req.user.id);
+if (user.role === "recruiter" && !user.isApproved) {
+  return res.status(403).json({ message: "Only approved recruiters can create companies" });
+};
+
+// Auto-fill email with recruiter's email
+    const email = user.email;
 
     if (req.file) {
       const result = await cloudinary.uploader.upload(req.file.path, {
@@ -15,7 +25,7 @@ exports.createCompany = async (req, res,next) => {
       });
 
 // Delete the local file
-        fs.unlink(file.path, (err) => {
+        fs.unlink(req.file.path, (err) => {
           if (err) {
             console.error("Failed to delete local file:", err);
           } else {
@@ -27,13 +37,16 @@ exports.createCompany = async (req, res,next) => {
       logoPublicId = result.public_id;
     }
 
+    
     const company = new Company({
       companyName,
       description,
       website,
       logoUrl,
+      email,
        logoPublicId,
-      recruiters: [req.user.id]
+      pendingRecruiters: [req.user.id],
+      isApproved: false
     });
 
     const savedCompany = await company.save();
@@ -42,6 +55,13 @@ exports.createCompany = async (req, res,next) => {
     await User.findByIdAndUpdate(req.user.id, {
       companyId: savedCompany._id,
     });
+
+    await notifyAdminsOfNewCompany(
+  companyName,
+  user.firstName + " " + user.lastName,
+  user.email
+);
+
 
     res.status(201).json(savedCompany);
   } catch (err) {
@@ -136,6 +156,64 @@ exports.deleteCompany = async (req, res,next) => {
 err.message = "Error deleting company";
 next(err);
 
+  }
+};
+
+// new addition
+// Recruiter requests to join an existing company
+exports.requestToJoinCompany = async (req, res, next) => {
+  try {
+    const { companyId } = req.body;
+
+    const company = await Company.findById(companyId);
+    if (!company) return res.status(404).json({ message: "Company not found" });
+
+    // Prevent duplicate requests
+    if (company.pendingRecruiters.includes(req.user.id) || company.recruiters.includes(req.user.id)) {
+      return res.status(400).json({ message: "Already requested or part of this company" });
+    }
+
+    company.pendingRecruiters.push(req.user.id);
+    await company.save();
+
+    res.status(200).json({ message: "Request sent to company for approval" });
+  } catch (err) {
+    err.statusCode = 500;
+    err.message = "Error requesting to join company";
+    next(err);
+  }
+};
+
+
+exports.approveRecruiter = async (req, res, next) => {
+  try {
+    const { companyId, recruiterId } = req.body;
+
+    const company = await Company.findById(companyId);
+    if (!company) return res.status(404).json({ message: "Company not found" });
+
+    // Only company owner/admin can approve
+    if (!company.recruiters.includes(req.user.id) && req.user.role !== "admin") {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    // Move from pending to active
+    company.pendingRecruiters = company.pendingRecruiters.filter(
+      (id) => id.toString() !== recruiterId
+    );
+    company.recruiters.push(recruiterId);
+    await company.save();
+
+    // Optionally, update the recruiter’s user doc
+    await User.findByIdAndUpdate(recruiterId, {
+      companyId: company._id
+    });
+
+    res.status(200).json({ message: "Recruiter approved" });
+  } catch (err) {
+    err.statusCode = 500;
+    err.message = "Error approving recruiter";
+    next(err);
   }
 };
 

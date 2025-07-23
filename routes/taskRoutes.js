@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const taskController = require("../contollers/taskController");
+const taskController = require("../controllers/taskController");
 const authMiddleware = require("../middleware/auth");
 const authorizeRole = require("../middleware/authorizeRole");
-const taskCompletionController = require("../contollers/taskCompletionController");
+const taskSubmissionController = require("../controllers/taskSubmissionController");
 
 //  CREATE task (only recruiter or admin)
 // router.post(
@@ -47,8 +47,7 @@ router.post(
   "/:taskId/complete",
   authMiddleware,
   authorizeRole("user"),
-  taskCompletionController.markAsComplete
+  taskSubmissionController.markTaskSubmission
 );
-
 
 module.exports = router;

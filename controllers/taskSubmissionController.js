@@ -28,6 +28,29 @@ exports.submitTask = async (req, res,next) => {
     });
 
     const saved = await newSubmission.save();
+    // Count total tasks in the simulation
+const totalTasks = await Task.countDocuments({ simulationId: task.simulationId });
+
+// Count user's submitted tasks for this simulation
+const completedTasks = await TaskSubmission.countDocuments({
+  userId,
+  simulationId: task.simulationId,
+  isSubmitted: true
+});
+
+// Update or create enrollment record
+const enrollment = await Enrollment.findOneAndUpdate(
+  { userId, simulationId: task.simulationId },
+  {
+    $setOnInsert: { userId, simulationId: task.simulationId },
+    $set: {
+      progress: Math.round((completedTasks / totalTasks) * 100),
+      isCompleted: completedTasks === totalTasks
+    }
+  },
+  { upsert: true, new: true }
+);
+
 
     res.status(201).json({ message: "Task submitted successfully", saved });
 
@@ -138,6 +161,36 @@ exports.markTaskSubmission = async (req, res, next) => {
     submission.reviewStatus = reviewStatus;
     submission.reviewerComment = reviewerComment || ""; // optional
     await submission.save();
+
+    //  If recruiter approved the task, mark it as completed
+if (reviewStatus === "approved") {
+  await TaskCompletion.findOneAndUpdate(
+    { userId: submission.userId, taskId: submission.taskId },
+    {
+      userId: submission.userId,
+      taskId: submission.taskId,
+      simulationId: submission.simulationId,
+      completedAt: new Date()
+    },
+    { upsert: true, new: true }
+  );
+
+  //  Update Enrollment progress
+  const totalTasks = await Task.countDocuments({ simulationId: submission.simulationId });
+  const completedTasks = await TaskCompletion.countDocuments({ userId: submission.userId, simulationId: submission.simulationId });
+
+  const progressPercentage = Math.round((completedTasks / totalTasks) * 100);
+
+  await Enrollment.findOneAndUpdate(
+    { userId: submission.userId, simulationId: submission.simulationId },
+    {
+      progressPercentage,
+      isCompleted: completedTasks === totalTasks
+    },
+    { upsert: true, new: true }
+  );
+}
+
 
     res.status(200).json({
       message: `Task marked as ${reviewStatus}`,

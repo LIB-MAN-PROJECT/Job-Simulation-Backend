@@ -2,10 +2,10 @@ const JobSimulation = require("../models/JobSimulationSchema");
 const cloudinary = require("../utils/cloudinary");
 const Task = require("../models/TaskSchema");
 const fs = require("fs");
-const Company =  require("../models/CompanySchema");
+const Company = require("../models/CompanySchema");
 
 // POST: Create new Job Simulation (recruiter)
-exports.jobSimulation = async (req, res,next) => {
+exports.jobSimulation = async (req, res, next) => {
   try {
     const {
       title,
@@ -15,14 +15,15 @@ exports.jobSimulation = async (req, res,next) => {
       companyId,
       level,
       duration,
+      isHiring,
+      isPublished,
     } = req.body;
 
     //  Get company info (using companyId from req.body)
-const company = await Company.findById(companyId);
-if (!company) {
-  return res.status(404).json({ message: "Company not found" });
-}
-
+    const company = await Company.findById(companyId);
+    if (!company) {
+      return res.status(404).json({ message: "Company not found" });
+    }
 
     //  Create job simulation first
     const newJobSimulation = new JobSimulation({
@@ -33,12 +34,11 @@ if (!company) {
       companyId,
       level,
       duration,
+      isHiring: isHiring === "true" || isHiring === true, // in case it's sent as a string
+      isPublished: isPublished === "true" || isPublished === true, // ensure boolean
       createdBy: req.user.id,
-      companyLogo: company.logoUrl
-      
+      companyLogo: company.logoUrl,
     });
-
-    
 
     await newJobSimulation.save();
 
@@ -109,25 +109,25 @@ if (!company) {
 
     res.status(201).json(newJobSimulation);
   } catch (error) {
-//     console.error("Error creating job simulation:", error);
-//     error.statusCode = 500;
-// error.message = "Error creating job simulation";
-// next(error);
+    //     console.error("Error creating job simulation:", error);
+    //     error.statusCode = 500;
+    // error.message = "Error creating job simulation";
+    // next(error);
 
-console.error(" Full error:", error); // Console log full error
+    console.error(" Full error:", error); // Console log full error
 
-  return res.status(500).json({
-    success: false,
-    message: "Error creating job simulation",
-    error: error.message,           // Main message
-    stack: error.stack,             // See where it broke
-    full: error                     // Raw error for debugging
-  });
+    return res.status(500).json({
+      success: false,
+      message: "Error creating job simulation",
+      error: error.message, // Main message
+      stack: error.stack, // See where it broke
+      full: error, // Raw error for debugging
+    });
   }
 };
 
 // GET: All jobSimulation (search & filter included)
-exports.getJobSimulation = async (req, res,next) => {
+exports.getJobSimulation = async (req, res, next) => {
   try {
     const { title, description, field } = req.query;
     const filter = {};
@@ -144,14 +144,13 @@ exports.getJobSimulation = async (req, res,next) => {
     res.status(200).json(simulation);
   } catch (err) {
     err.statusCode = 500;
-err.message = "Error fetching job simulation";
-next(err);
-
+    err.message = "Error fetching job simulation";
+    next(err);
   }
 };
 
 // GET: Single jobSimulation by ID
-exports.jobSimulationById = async (req, res,next) => {
+exports.jobSimulationById = async (req, res, next) => {
   try {
     const simulation = await JobSimulation.findById(req.params.id);
     if (!simulation)
@@ -159,16 +158,14 @@ exports.jobSimulationById = async (req, res,next) => {
 
     res.status(200).json(simulation);
   } catch (err) {
-    
-err.statusCode = 500;
-err.message = "Error fetching job simulation";
-next(err);
-
+    err.statusCode = 500;
+    err.message = "Error fetching job simulation";
+    next(err);
   }
 };
 
 //GET:job simulation by a specific User ID
-exports.getJobSimulationByUserId = async (req, res,next) => {
+exports.getJobSimulationByUserId = async (req, res, next) => {
   console.log("req.user.id", req.user.id);
   try {
     const simulation = await JobSimulation.find({
@@ -181,15 +178,14 @@ exports.getJobSimulationByUserId = async (req, res,next) => {
   } catch (err) {
     console.error("Error fetching job simulation:", err);
     err.statusCode = 500;
-err.message = "Error fecthing job simulations";
-next(err);
-
+    err.message = "Error fecthing job simulations";
+    next(err);
   }
 };
 
 // PUT: Update jobSimulations (recruiter only, must be owner)
 
-exports.updateJobSimulation = async (req, res,next) => {
+exports.updateJobSimulation = async (req, res, next) => {
   const { title, description, field, companyName, tasks, level, duration } =
     req.body;
   try {
@@ -230,14 +226,13 @@ exports.updateJobSimulation = async (req, res,next) => {
     res.status(201).json({ message: "Updated Successfully", simulation });
   } catch (err) {
     err.statusCode = 500;
-err.message = "Error updating job simulation";
-next(err);
-
+    err.message = "Error updating job simulation";
+    next(err);
   }
 };
 
 // DELETE: Remove simulation (recruiter only, must be owner)
-exports.deleteJobSimulation = async (req, res,next) => {
+exports.deleteJobSimulation = async (req, res, next) => {
   try {
     const jobSimulation = await JobSimulation.findById(req.params.id);
     if (!jobSimulation)
@@ -262,11 +257,22 @@ exports.deleteJobSimulation = async (req, res,next) => {
 
     res.status(200).json({ message: "job simulation deleted successfully" });
   } catch (error) {
-   
     err.statusCode = 500;
-err.message = "Error deleting job simulation";
-next(err);
+    err.message = "Error deleting job simulation";
+    next(err);
+  }
+};
 
+// dont fetch job simulation that are published as false
+exports.getPublishedSimulations = async (req, res) => {
+  try {
+    const simulations = await JobSimulation.find({
+      isPublished: true,
+    }).populate("companyId");
 
+    res.status(200).json(simulations);
+  } catch (error) {
+    console.error("Error fetching published simulations:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };

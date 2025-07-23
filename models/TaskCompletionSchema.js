@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const taskCompletionSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  task: { type: mongoose.Schema.Types.ObjectId, ref: "Task", required: true },
-  simulation: { type: mongoose.Schema.Types.ObjectId, ref: "JobSimulation", required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  taskId: { type: mongoose.Schema.Types.ObjectId, ref: "Task", required: true },
+  simulationId: { type: mongoose.Schema.Types.ObjectId, ref: "JobSimulation", required: true },
   completedAt: { type: Date, default: Date.now }
 }, { timestamps: true });
 

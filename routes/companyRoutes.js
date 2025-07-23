@@ -1,10 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const companyController = require("../contollers/companyController");
+const companyController = require("../controllers/companyController");
 const authMiddleware = require("../middleware/auth");
 const authorizeRole = require("../middleware/authorizeRole");
 const upload = require("../middleware/upload");
-
 
 // Create a company (recruiter only)
 router.post(
@@ -36,6 +35,19 @@ router.delete(
   authMiddleware,
   authorizeRole("admin"),
   companyController.deleteCompany
+);
+
+router.post(
+  "/request-to-join",
+  authMiddleware,
+  authorizeRole("recruiter"),
+  companyController.requestToJoinCompany
+);
+router.post(
+  "/approve-recruiter",
+  authMiddleware,
+  authorizeRole("admin", "recruiter"),
+  companyController.approveRecruiter
 );
 
 module.exports = router;

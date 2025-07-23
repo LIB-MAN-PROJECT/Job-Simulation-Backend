@@ -44,6 +44,11 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: "User not found" });
 
+    // Prevent unapproved recruiters from logging in
+if (user.role === "recruiter" && !user.isApproved) {
+  return res.status(403).json({ message: "Your recruiter account is awaiting admin approval." });
+}
+
     // Compare password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });

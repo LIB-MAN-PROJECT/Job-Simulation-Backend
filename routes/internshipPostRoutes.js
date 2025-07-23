@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const internshipPostController = require("../contollers/internshipPostController");
+const internshipPostController = require("../controllers/internshipPostController");
 const authMiddleware = require("../middleware/auth");
 const authorizeRole = require("../middleware/authorizeRole");
 
