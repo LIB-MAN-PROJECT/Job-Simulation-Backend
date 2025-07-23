@@ -21,9 +21,9 @@ const signup = async (req, res) => {
         return errorMessage(res, 400, "Missing required user fields");
         }
 
-        const userExists = await User.findOne({ userName });
+        const userExists = await User.findOne({ userName,email });
         if (userExists) {
-        return errorMessage(res, 400, "User already exists");
+        return errorMessage(res, 400, "User credentials already exists");
             // return res.status(400).json({
             //     message: "User already exists",
             // });
@@ -78,12 +78,12 @@ const signup = async (req, res) => {
                 //creating new company if it doesn't exist
 
                 //checking file existence
-                if(!req.file || !req.file.path){
-                console.log("No valid file found");
-                return errorMessage(res, 400, "File not provided or invalid");
-                }
+                // if(!req.file || !req.file.path){
+                // console.log("No valid file found");
+                // return errorMessage(res, 400, "File not provided or invalid");
+                // }
 
-                const uploadedFile = await uploadFile(req, req.file.path, "/upskill/companyLogos",res);
+                // const uploadedFile = await uploadFile(req, req.file.path, "/upskill/companyLogos",res);
 
                 company = await Company.create({
                 companyName,
@@ -91,8 +91,8 @@ const signup = async (req, res) => {
                 companyEmail,
                 companyCustomId: await uniqueCompanyId(),
                 description,
-                logoUrl: uploadedFile.url,
-                logoPublicId: uploadedFile.public_id,
+                // logoUrl: uploadedFile.url,
+                // logoPublicId: uploadedFile.public_id,
                 website,
                 isVerified:false
                 });
