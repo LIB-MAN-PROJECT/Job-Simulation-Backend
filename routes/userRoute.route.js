@@ -25,7 +25,9 @@ router.post('/simulation/:simulationId/enroll',authMiddleware,authorizeRole("stu
 router.post('/simulation/:simulationId/task/:taskId/submit-task',authMiddleware,authorizeRole("student"),uploadDocument.single("file"),taskSubmissionController.submitTask);
 
 //Editing Submitted task
-router.put('/simulation/:simulationId/task/:taskId/submission/:taskSubmissonId',authMiddleware,authorizeRole("student"),uploadDocument.single("file"),taskSubmissionController.editSubmittedTask);
+router.put('/simulation/:simulationId/task/:taskId/submission/:taskSubmissonId/edit-submission',authMiddleware,authorizeRole("student"),uploadDocument.single("file"),taskSubmissionController.editSubmittedTask);
+
+router.delete('/simulation/:simulationId/task/:taskId/submission/:taskSubmissonId/delete-submission',authMiddleware,authorizeRole("student"),taskSubmissionController.deleteSubmittedTask);
 
 //REVIEWS
 router.post('/simulation/:simulationId/create-review',authMiddleware,authorizeRole("student"),reviewController.sendReview);
