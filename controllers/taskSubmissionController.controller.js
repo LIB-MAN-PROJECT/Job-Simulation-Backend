@@ -24,12 +24,11 @@ const { readData, WriteData } = require("../utils/fileHandler.util");
 const { uploadFile, deleteFile } = require("../utils/uploadFile.util");
 const Enroll = require("../models/enrollmentModel.model")
 const {Task,TaskSubmission}=require("../models/taskModel.model");
-
+const injectCompletionStatus = require("../utils/injectCompletionStatus.util")
 
 
 const submitTask= async(req,res)=>{
     const{simulationId,taskId}=req.params;
-
     try {
         //checking user enrollment
         const enrolled= await Enroll.findOne({userId:req.user.id,simulationId});
@@ -73,6 +72,7 @@ const submitTask= async(req,res)=>{
         }
         enrolled.taskSubmissions.push(taskSubmission._id);
 
+        //updated
         //Recalculate progress
         const totalTasks=await Task.countDocuments({simulationId}); //Total tasks in simulation
         const submittedTaskcount= await TaskSubmission.countDocuments({
@@ -80,6 +80,10 @@ const submitTask= async(req,res)=>{
             simulationId:simulationId,
             isSubmitted:true
         });// Total number of submitted tasks by specific user
+
+        // fetch task again as plain object to decorate
+        const rawTask = await Task.findById(taskId).lean();
+        const decoratedTask = injectCompletionStatus(rawTask); // sets isCompleted: true
 
         //Calculate progress
         const progressPercent = totalTasks > 0 
@@ -89,19 +93,28 @@ const submitTask= async(req,res)=>{
         //update user's enrollment progress
         enrolled.progress=progressPercent;
 
+        console.log("enrolled=",enrolled);
         //Mark completion if all tasks are submitted
-        if(progressPercent >= 96 && !enrolled.completedAt){
-            enrolled.completedAt=Date.now();
+        if(progressPercent >= 99 && !enrolled.completedAt){
+            enrolled.completedAt=new Date();
             enrolled.isReadyForReview =true;
             enrolled.isReviewed=false;
             enrolled.reviewState="Pending";
         }
         //saving updates
         await enrolled.save()
+        if(progressPercent >= 99){
+             return successMessage(res,200,"You have completed all the tasks",{
+            submission: taskSubmission,
+            progress: progressPercent,
+            task:decoratedTask
+        });
+        }
 
         return successMessage(res,200,"Task submitted successfully",{
             submission: taskSubmission,
-            progress: progressPercent
+            progress: progressPercent,
+            task:decoratedTask
         })
     
     } catch (error) {
