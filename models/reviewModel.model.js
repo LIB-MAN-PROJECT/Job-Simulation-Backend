@@ -13,4 +13,4 @@ const reviewSchema = new mongoose.Schema({
 //allowing only one review per user per simulation
 reviewSchema.index({ userId: 1, simulationId: 1 }, { unique: true });
 
-module.exports = mongoose.model("review", reviewSchema);
+module.exports = mongoose.model("Review", reviewSchema);
