@@ -33,11 +33,11 @@ const submitTask= async(req,res)=>{
         //checking user enrollment
         const enrolled= await Enroll.findOne({userId:req.user.id,simulationId});
         console.log("Enrollment Document",enrolled);
-        if (!enrolled) return errorMessage(res,400,"You aren't enrolled in this simulation");
+        if (!enrolled) return successMessage(res,400,"You aren't enrolled in this simulation");
          
         //checking for existence of submission
         const submissionExists = await TaskSubmission.findOne({userId:req.user.id,simulationId,taskId});
-
+        console.log("Submission=",submissionExists);
         if(submissionExists) return errorMessage(res,400,"You have already submitted this task");
 
         //checking file existence
@@ -220,7 +220,7 @@ const deleteSubmittedTask = async(req,res)=>{
             enrolled.completedAt=null;
             enrolled.isReadyForReview =false;
             enrolled.isReviewed=false;
-            enrolled.reviewState="Pending";
+            enrolled.feedbackState="Pending";
         }
         //saving updates
         await enrolled.save()
