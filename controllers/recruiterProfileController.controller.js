@@ -192,7 +192,7 @@ const getAllInternshipsApplicants = async (req, res) => {
 const viewAllCompletedTasks = async(req,res)=>{
     try {
         const enrollments=await Enroll.find({isReadyForReview:true})
-         .select('taskSubmissions progress completedAt')
+         .select('taskSubmissions progress completedAt feedbackState')
          .populate('userId', 'firstName lastName email')
          .populate('simulationId', 'title')
         .populate({
