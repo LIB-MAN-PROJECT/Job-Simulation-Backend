@@ -1122,7 +1122,7 @@
         }
       }
     },
-    "/api/recruiterprofile/overview/simulations": {
+    "/api/recruiter/profile/overview/simulations": {
       "get": {
         "description": "",
         "parameters": [
@@ -1139,7 +1139,7 @@
         }
       }
     },
-    "/api/recruiterprofile/overview/simulations/{simulationId}": {
+    "/api/recruiter/profile/overview/simulations/{simulationId}": {
       "get": {
         "description": "",
         "parameters": [
@@ -1162,7 +1162,7 @@
         }
       }
     },
-    "/api/recruiterprofile/overview/simulations/participants": {
+    "/api/recruiter/profile/overview/simulations/participants": {
       "get": {
         "description": "",
         "parameters": [
@@ -1179,7 +1179,7 @@
         }
       }
     },
-    "/api/recruiterprofile/overview/simulations/internships": {
+    "/api/recruiter/profile/overview/simulations/internships": {
       "get": {
         "description": "",
         "parameters": [
@@ -1196,7 +1196,7 @@
         }
       }
     },
-    "/api/recruiterprofile/overview/simulations/internships/{internshipId}": {
+    "/api/recruiter/profile/overview/simulations/internships/{internshipId}": {
       "get": {
         "description": "",
         "parameters": [
@@ -1219,7 +1219,7 @@
         }
       }
     },
-    "/api/recruiterprofile/overview/simulations/internships/{internshipId}/applicants": {
+    "/api/recruiter/profile/overview/simulations/internships/{internshipId}/applicants": {
       "get": {
         "description": "",
         "parameters": [
