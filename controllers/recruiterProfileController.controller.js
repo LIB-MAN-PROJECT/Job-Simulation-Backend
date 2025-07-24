@@ -59,6 +59,133 @@ const getRecruiterAnalytics = async (req,res) =>{
   }
 };
 
+//All simulations made by Company
+const getAllSimulationsByCompany = async (req, res) => {
+  const companyId = req.user.companyId;
+
+  try {
+    const simulations = await JobSim.find({ companyId }).lean();
+
+    if (!simulations || simulations.length === 0) {
+      return errorMessage(res, 404, "No simulations found for your company");
+    }
+
+    return successMessage(res, 200, "All company simulations retrieved", simulations);
+  } catch (error) {
+    console.error("Error retrieving simulations for recruiter:", error);
+    return errorMessage(res, 500, "Internal Server Error", error);
+  }
+};
+
+//Find single Simulation
+const getSingleCompanySimulationWithTasks = async (req, res) => {
+  const { simulationId } = req.params;
+  const companyId = req.user.companyId; 
+
+  try {
+    const simulation = await JobSim.findOne({ _id: simulationId, companyId })
+      .populate("tasks")
+      .lean();
+
+    if (!simulation) {
+      return errorMessage(res, 404, "Simulation not found or access unauthorized");
+    }
+
+    return successMessage(res, 200, "Simulation retrieved successfully", simulation);
+  } catch (error) {
+    console.error("Error fetching simulation:", error);
+    return errorMessage(res, 500, "Internal Server Error", error);
+  }
+};
+
+//Get List of all simulation participants
+const getAllParticipantsByCompanyId = async (req, res) => {
+  const  companyId  = req.user.companyId;
+
+  try {
+    const simulations = await JobSim.find({ companyId }).select("participants").lean();
+    if (!simulations || simulations.length === 0) {
+      return errorMessage(res, 404, "No simulations found for this company");
+    }
+
+    const participantIds = simulations.flatMap(sim => sim.participants || []);
+    const uniqueUserIds = [...new Set(participantIds.map(id => id.toString()))];
+
+    if (uniqueUserIds.length === 0) {
+      return errorMessage(res, 404, "No participants found across company simulations");
+    }
+
+    const participants = await User.find({ _id: { $in: uniqueUserIds } })
+      .select("firstName lastName email role")
+      .lean();
+
+    return successMessage(res, 200, "Company simulation participants retrieved", {
+      totalParticipants: participants.length,
+      participants
+    });
+  } catch (error) {
+    console.error("Error fetching participants by company:", error);
+    return errorMessage(res, 500, "Internal Server Error", error);
+  }
+};
+
+//get list of all internships
+const getAllInternshipsByCompanyId = async (req, res) => {
+  const companyId  = req.user.id
+
+  try {
+    const internships = await InternshipPost.find({ companyId }).lean();
+    if (!internships || internships.length === 0) {
+      return errorMessage(res, 404, "No internships found for this company");
+    }
+
+    return successMessage(res, 200, "Internships retrieved successfully", internships);
+  } catch (error) {
+    console.error("Error retrieving internships by companyId:", error);
+    return errorMessage(res, 500, "Internal Server Error", error);
+  }
+};
+
+//get details of single internship
+const getSingleCompanyInternshipById = async (req, res) => {
+  const { internshipId } = req.params;
+  const companyId = req.user.companyId;
+
+  try {
+    const internship = await InternshipPost.findOne({ _id: internshipId, companyId }) .populate("applicants", "firstName lastName email")
+    .lean();
+
+    if (!internship) {
+      return errorMessage(res, 404, "Internship not found for your company");
+    }
+
+    return successMessage(res, 200, "Internship retrieved successfully", internship);
+  } catch (error) {
+    console.error("Error retrieving internship by company ID and internship ID:", error);
+    return errorMessage(res, 500, "Internal Server Error", error);
+  }
+};
+
+//Get list of all Internship Applicanst
+const getAllInternshipsApplicants = async (req, res) => {
+  const { internshipId } = req.params;
+
+  try {
+    const applicants = await InternshipApplication.find({ internshipId })
+      .populate("userId", "firstName lastName email")
+      .lean();
+
+    if (!applicants || applicants.length === 0) {
+      return errorMessage(res, 404, "No applicants found for this internship");
+    }
+
+    return successMessage(res, 200, "Applicants retrieved successfully", applicants);
+  } catch (error) {
+    console.error("Error retrieving internship applicants:", error);
+    return errorMessage(res, 500, "Internal Server Error", error);
+  }
+};
+
 //Permissions
 //View created sims and internsip posts 
 //request new codes and custom IDs
@@ -150,4 +277,4 @@ const generateCertForEnrollment = async (req, res) => {
   }
 };
 
-module.exports={viewAllCompletedTasks,reviewEnrollment,generateCertForEnrollment,getRecruiterAnalytics}
+module.exports={viewAllCompletedTasks,reviewEnrollment,generateCertForEnrollment,getRecruiterAnalytics,getAllSimulationsByCompany,getSingleCompanySimulationWithTasks,getAllParticipantsByCompanyId,getAllInternshipsByCompanyId,getSingleCompanyInternshipById,getAllInternshipsApplicants}
