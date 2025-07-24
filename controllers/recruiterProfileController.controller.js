@@ -2,12 +2,12 @@ const JobSim = require("../models/jobSimulation.model");
 const { errorMessage, successMessage } = require("../utils/responseHandler.util");
 const { readData, WriteData } = require("../utils/fileHandler.util");
 const { uploadFile, deleteFile } = require("../utils/uploadFile.util");
-const User=require("../models/userModel.model");
-const {Task,TaskSubmission}=require("../models/taskModel.model");
+const User = require("../models/userModel.model");
+const { Task, TaskSubmission } = require("../models/taskModel.model");
 const Enroll = require("../models/enrollmentModel.model");
 const Certificate = require("../models/certificateModel.model");
 const generateCertificate = require("../utils/generateCertificate.util");
-const { InternshipPost,InternshipApplication } = require("../models/internshipModel.model");
+const { InternshipPost, InternshipApplication } = require("../models/internshipModel.model");
 
 
 // Dashboard Overview	Quick stats on simulations, applicants, tasks
@@ -20,9 +20,9 @@ const { InternshipPost,InternshipApplication } = require("../models/internshipMo
 // Notification Center	Alerts for new applications or task submissions
 
 //ADDDDDDD ANALYTICSSSSSS
-const getRecruiterAnalytics = async (req,res) =>{
-    const companyId = req.user.companyId
- try {
+const getRecruiterAnalytics = async (req, res) => {
+  const companyId = req.user.companyId
+  try {
     // Count simulations
     const totalSimulations = await JobSim.countDocuments({ companyId });
 
@@ -80,7 +80,7 @@ const getAllSimulationsByCompany = async (req, res) => {
 //Find single Simulation
 const getSingleCompanySimulationWithTasks = async (req, res) => {
   const { simulationId } = req.params;
-  const companyId = req.user.companyId; 
+  const companyId = req.user.companyId;
 
   try {
     const simulation = await JobSim.findOne({ _id: simulationId, companyId })
@@ -100,7 +100,7 @@ const getSingleCompanySimulationWithTasks = async (req, res) => {
 
 //Get List of all simulation participants
 const getAllParticipantsByCompanyId = async (req, res) => {
-  const  companyId  = req.user.companyId;
+  const companyId = req.user.companyId;
 
   try {
     const simulations = await JobSim.find({ companyId }).select("participants").lean();
@@ -131,7 +131,7 @@ const getAllParticipantsByCompanyId = async (req, res) => {
 
 //get list of all internships
 const getAllInternshipsByCompanyId = async (req, res) => {
-  const companyId  = req.user.id
+  const companyId = req.user.id
 
   try {
     const internships = await InternshipPost.find({ companyId }).lean();
@@ -152,8 +152,8 @@ const getSingleCompanyInternshipById = async (req, res) => {
   const companyId = req.user.companyId;
 
   try {
-    const internship = await InternshipPost.findOne({ _id: internshipId, companyId }) .populate("applicants", "firstName lastName email")
-    .lean();
+    const internship = await InternshipPost.findOne({ _id: internshipId, companyId }).populate("applicants", "firstName lastName email")
+      .lean();
 
     if (!internship) {
       return errorMessage(res, 404, "Internship not found for your company");
@@ -189,49 +189,49 @@ const getAllInternshipsApplicants = async (req, res) => {
 //Permissions
 //View created sims and internsip posts 
 //request new codes and custom IDs
-const viewAllCompletedTasks = async(req,res)=>{
-    try {
-        const enrollments=await Enroll.find({isReadyForReview:true})
-         .select('taskSubmissions progress completedAt feedbackState')
-         .populate('userId', 'firstName lastName email')
-         .populate('simulationId', 'title')
-        .populate({
-            path: 'taskSubmissions',
-            match: { isSubmitted: true },
-            populate: {
-            path: 'taskId',
-            select: 'title completionScore'
-            }
-        })
-         .sort({completedAt:1});//oldest first
-        console.log("Enrollments=",enrollments);
-        return successMessage(res, 200, 'Completed tasks retrieved successfully', enrollments);
-    } catch (error) {
-        console.error('Error fetching completed tasks:', error);
-        return errorMessage(res, 500, 'Internal Server Error', error);
-    }
+const viewAllTasks = async (req, res) => {
+  try {
+    const enrollments = await Enroll.find()
+      .select('taskSubmissions progress completedAt feedbackState')
+      .populate('userId', 'firstName lastName email')
+      .populate('simulationId', 'title')
+      .populate({
+        path: 'taskSubmissions',
+        match: { isSubmitted: true },
+        populate: {
+          path: 'taskId',
+          select: 'title completionScore'
+        }
+      })
+      .sort({ completedAt: 1 });//oldest first
+    console.log("Enrollments=", enrollments);
+    return successMessage(res, 200, 'Completed tasks retrieved successfully', enrollments);
+  } catch (error) {
+    console.error('Error fetching completed tasks:', error);
+    return errorMessage(res, 500, 'Internal Server Error', error);
+  }
 }
 
-const reviewEnrollment = async(req,res)=>{
-    const {enrollmentId} = req.params;
-    const {feedbackState,feedback}=req.body
-    
-    try {
-        const enrollment = await Enroll.findById(enrollmentId);
-        if(!enrollment) return errorMessage(res,404,"Enrollment not found");
+const reviewEnrollment = async (req, res) => {
+  const { enrollmentId } = req.params;
+  const { feedbackState, feedback } = req.body
 
-        enrollment.isReviewed=true;
-        enrollment.feedbackState=feedbackState;
-        enrollment.reviewedAt=new Date();
-        enrollment.feedback = feedback|| '';
+  try {
+    const enrollment = await Enroll.findById(enrollmentId);
+    if (!enrollment) return errorMessage(res, 404, "Enrollment not found");
 
-        //generate certificate if reviewState is accepted
-        await enrollment.save()
-        return successMessage(res,200,`Tasks marks as "${feedbackState}"`,enrollment);
-    } catch (error) {
-        console.error('Enrollment review error:', error);
-        return errorMessage(res, 500, 'Internal Server Error',error);
-    }
+    enrollment.isReviewed = true;
+    enrollment.feedbackState = feedbackState;
+    enrollment.reviewedAt = new Date();
+    enrollment.feedback = feedback || '';
+
+    //generate certificate if reviewState is accepted
+    await enrollment.save()
+    return successMessage(res, 200, `Tasks marks as "${feedbackState}"`, enrollment);
+  } catch (error) {
+    console.error('Enrollment review error:', error);
+    return errorMessage(res, 500, 'Internal Server Error', error);
+  }
 }
 
 
@@ -240,41 +240,119 @@ const reviewEnrollment = async(req,res)=>{
 /**
  * Generates certificate after accepted review
  */
-const generateCertForEnrollment = async (req, res) => {
+const sendEmail = require("../utils/sendEmail")
+// const generateCertForEnrollment = async (req, res) => {
+//   const { enrollmentId } = req.params;
+
+//   try {
+//     const enrollment = await Enroll.findById(enrollmentId).populate('userId simulationId');
+//     if (!enrollment) return errorMessage(res, 404, 'Enrollment not found');
+//     if (enrollment.feedbackState !== 'Accepted') {
+//       return errorMessage(res, 400, 'Certificate can only be issued for accepted enrollments');
+//     }
+
+//     // 💡 Check if already issued
+//     // const existing = await Certificate.findOne({ enrollmentId });
+//     // if (existing) return errorMessage(res, 409, 'Certificate already issued for this enrollment');
+
+//     // 🛠️ Generate and send certificate
+//     const certMeta = await generateCertificate({
+//       nameOnCertificate: `${enrollment.userId.firstName} ${enrollment.userId.lastName}`,
+//       simulationName: enrollment.simulationId.title,
+//       userEmail: enrollment.userId.email,
+//       filenameBase: `cert_${enrollmentId}`
+//     });
+
+//     // 🗃️ Save metadata to certificate schema
+//     const certificate = await Certificate.create({
+//       enrollmentId,
+//       userId: enrollment.userId._id,
+//       simulationId: enrollment.simulationId._id,
+//       ...certMeta
+//     });
+
+//     return successMessage(res, 201, 'Certificate issued successfully', certificate);
+//   } catch (error) {
+//     console.error('Certificate generation error:', error);
+//     return errorMessage(res, 500, 'Internal Server Error');
+//   }
+// };
+
+const generatePdfLocally = require("../utils/Generate PDF/generatePdfLocally");
+const uploadLocalPdfToCloudinary = require("../utils/Generate PDF/uploadLocalPdfToCloudinary");
+const path = require("path");
+
+const generateAndUploadCertificate = async (req, res) => {
   const { enrollmentId } = req.params;
 
   try {
-    const enrollment = await Enroll.findById(enrollmentId).populate('userId simulationId');
-    if (!enrollment) return errorMessage(res, 404, 'Enrollment not found');
-    if (enrollment.feedbackState !== 'Accepted') {
-      return errorMessage(res, 400, 'Certificate can only be issued for accepted enrollments');
+    const enrollment = await Enroll.findById(enrollmentId).populate("userId simulationId");
+    if (!enrollment) return errorMessage(res, 404, "Enrollment not found");
+    if (enrollment.feedbackState !== "Accepted") {
+      return errorMessage(res, 400, "Certificate can only be issued for accepted enrollments");
     }
 
-    // 💡 Check if already issued
-    const existing = await Certificate.findOne({ enrollmentId });
-    if (existing) return errorMessage(res, 409, 'Certificate already issued for this enrollment');
+    // 💡 Optional check for duplicates
+    // const existing = await Certificate.findOne({ enrollmentId });
+    // if (existing) return errorMessage(res, 409, "Certificate already issued");
 
-    // 🛠️ Generate and send certificate
-    const certMeta = await generateCertificate({
-      nameOnCertificate: `${enrollment.userId.firstName} ${enrollment.userId.lastName}`,
-      simulationName: enrollment.simulationId.title,
-      userEmail: enrollment.userId.email,
-      filenameBase: `cert_${enrollmentId}`
+    const userName = `${enrollment.userId.firstName} ${enrollment.userId.lastName}`;
+    console.log("username=", userName)
+    const simulationName = enrollment.simulationId.title;
+    console.log("simulationName=", simulationName)
+    const userEmail = enrollment.userId.email;
+    const filenameBase = `cert_${enrollmentId}_${Date.now()}`;
+    console.log("fileNameBase=", filenameBase);
+    const outputFolder = path.join(__dirname, "../certificates");
+    console.log("outputFolder")
+    console.log("outputFolder", outputFolder);
+
+    // 📝 Step 1: Generate PDF and save locally
+    const localPdfPath = await generatePdfLocally({
+      nameOnCertificate: userName,
+      simulationName,
+      outputFolder
     });
+    console.log("localPdfPath", localPdfPath);
 
-    // 🗃️ Save metadata to certificate schema
+    // ☁️ Step 2: Upload local file to Cloudinary
+    const certMeta = await uploadLocalPdfToCloudinary(localPdfPath, filenameBase);
+
+    // 🗂️ Step 3: Save to database
     const certificate = await Certificate.create({
-      enrollmentId,
       userId: enrollment.userId._id,
+      fullName: userName,
       simulationId: enrollment.simulationId._id,
-      ...certMeta
+      enrollmentId,
+      certUrl: certMeta.certUrl,
+      certPublicId: certMeta.certPublicId,
+      downloadUrl: certMeta.downloadUrl,
+      issuedAt: certMeta.certIssuedAt
     });
 
-    return successMessage(res, 201, 'Certificate issued successfully', certificate);
+    const emailHTML = `
+      <h2>🎓 Certificate of Completion</h2>
+      <p>Hi ${userName},</p>
+      <p>You’ve successfully completed <strong>${simulationName}</strong>.</p>
+      <p>Your certificate is ready: <a href="${certMeta.downloadUrl}" target="_blank">Click to Download</a></p>
+      <br/>
+      <p>Congratulations again!<br/>Upskill Team</p>
+    `;
+
+    await sendEmail({
+      to: userEmail,
+      subject: "Your Certificate of Completion",
+      html: emailHTML
+    });
+
+    return successMessage(res, 201, "Certificate issued successfully", certificate);
+
   } catch (error) {
-    console.error('Certificate generation error:', error);
-    return errorMessage(res, 500, 'Internal Server Error');
+    console.error("🚨 Certificate generation error:", error);
+    return errorMessage(res, 500, "Internal Server Error", error);
   }
 };
 
-module.exports={viewAllCompletedTasks,reviewEnrollment,generateCertForEnrollment,getRecruiterAnalytics,getAllSimulationsByCompany,getSingleCompanySimulationWithTasks,getAllParticipantsByCompanyId,getAllInternshipsByCompanyId,getSingleCompanyInternshipById,getAllInternshipsApplicants}
+
+
+module.exports = { viewAllTasks, reviewEnrollment, getRecruiterAnalytics, getAllSimulationsByCompany, getSingleCompanySimulationWithTasks, getAllParticipantsByCompanyId, getAllInternshipsByCompanyId, getSingleCompanyInternshipById, getAllInternshipsApplicants, generateAndUploadCertificate }
