@@ -5,8 +5,9 @@ const certificateSchema = new mongoose.Schema({
     fullName: { type: String },
     simulationId: { type: mongoose.Schema.Types.ObjectId, ref: 'JobSimulation', required: true },
     enrollmentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Enrollment', required: true },
-    certUrl: { type: String, required: true },
-    certPublicId: { type: String, required: true, unique: true },
+    certUrl: { type: String },
+    certPublicId: { type: String},
+    downloadUrl:{type:String},
     issuedAt: { type: Date, default: Date.now }
 }, { timestamps: true });
 
