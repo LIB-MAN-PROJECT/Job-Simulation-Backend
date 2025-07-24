@@ -191,20 +191,20 @@ const getAllInternshipsApplicants = async (req, res) => {
 //request new codes and custom IDs
 const viewAllCompletedTasks = async(req,res)=>{
     try {
-        const enrollments=await Enroll.find({isReadyForReview:true,reviewState:'Pending'})
-        .select('userId simulationId taskSubmissions progress completedAt')
-        .populate('userId', 'firstName lastName email')
-        .populate('simulationId', 'title')
+        const enrollments=await Enroll.find({isReadyForReview:true})
+         .select('taskSubmissions progress completedAt')
+         .populate('userId', 'firstName lastName email')
+         .populate('simulationId', 'title')
         .populate({
             path: 'taskSubmissions',
-            match: { isSubmitted: true }, // Only include submitted tasks
+            match: { isSubmitted: true },
             populate: {
             path: 'taskId',
             select: 'title completionScore'
             }
         })
-        .sort({completedAt:1});//oldest first
-
+         .sort({completedAt:1});//oldest first
+        console.log("Enrollments=",enrollments);
         return successMessage(res, 200, 'Completed tasks retrieved successfully', enrollments);
     } catch (error) {
         console.error('Error fetching completed tasks:', error);
