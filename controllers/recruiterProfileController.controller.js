@@ -278,8 +278,8 @@ const sendEmail = require("../utils/sendEmail")
 //   }
 // };
 
-const generatePdfLocally = require("../utils/Generate PDF/generatePdfLocally");
-const uploadLocalPdfToCloudinary = require("../utils/Generate PDF/uploadLocalPdfToCloudinary");
+const generatePdfLocally = require("../utils/generate_pdf/generatePdfLocally");
+const uploadLocalPdfToCloudinary = require("../utils/generate_pdf/uploadLocalPdfToCloudinary");
 const path = require("path");
 
 const generateAndUploadCertificate = async (req, res) => {
