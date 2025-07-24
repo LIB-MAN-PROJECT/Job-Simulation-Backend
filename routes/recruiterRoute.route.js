@@ -90,11 +90,13 @@ router.delete('/delete-internship/:internshipId',authMiddleware,
 authorizeRole("recruiter"),internshipController.deleteInternshipPost);
 
 //ENROLLMENT
-router.get('/enrollments/get-completed',authMiddleware,authorizeRole("recruiter"),recruiterProfile.viewAllCompletedTasks);
+router.get('/enrollments/get-completed',authMiddleware,authorizeRole("recruiter"),recruiterProfile.viewAllTasks);
 
 router.post('/enrollments/:enrollmentId/review',authMiddleware,authorizeRole("recruiter"),recruiterProfile.reviewEnrollment);
 
-router.post('/certificates/enrollments/:enrollmentId/generate',authMiddleware,authorizeRole("recruiter"),recruiterProfile.generateCertForEnrollment);
+// router.post('/certificates/enrollments/:enrollmentId/generate',authMiddleware,authorizeRole("recruiter"),recruiterProfile.generateCertForEnrollment);
+
+router.post('/certificates/enrollments/:enrollmentId/generate',authMiddleware,authorizeRole("recruiter"),recruiterProfile.generateAndUploadCertificate)
 
 //PROFILE
 router.get('/profile/overview',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getRecruiterAnalytics);
