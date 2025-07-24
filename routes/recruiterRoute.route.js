@@ -99,17 +99,17 @@ router.post('/certificates/enrollments/:enrollmentId/generate',authMiddleware,au
 //PROFILE
 router.get('/profile/overview',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getRecruiterAnalytics);
 
-router.get('profile/overview/simulations',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getAllSimulationsByCompany);
+router.get('/profile/overview/simulations',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getAllSimulationsByCompany);
 
-router.get('profile/overview/simulations/:simulationId',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getSingleCompanySimulationWithTasks);
+router.get('/profile/overview/simulations/:simulationId',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getSingleCompanySimulationWithTasks);
 
-router.get('profile/overview/simulations/participants',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getAllParticipantsByCompanyId);
+router.get('/profile/overview/simulations/participants',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getAllParticipantsByCompanyId);
 
-router.get('profile/overview/simulations/internships',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getAllInternshipsByCompanyId);
+router.get('/profile/overview/simulations/internships',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getAllInternshipsByCompanyId);
 
-router.get('profile/overview/simulations/internships/:internshipId',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getSingleCompanyInternshipById);
+router.get('/profile/overview/simulations/internships/:internshipId',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getSingleCompanyInternshipById);
 
-router.get('profile/overview/simulations/internships/:internshipId/applicants',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getAllInternshipsApplicants);
+router.get('/profile/overview/simulations/internships/:internshipId/applicants',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getAllInternshipsApplicants);
 
 
 
