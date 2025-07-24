@@ -79,6 +79,24 @@ const getEnrolledSimulations = async (req, res) => {
   }
 };
 
+const getEnrolledSimulationsById = async (req, res) => {
+  const userId = req.user.id;
+  const { enrollmentId } = req.params;
+
+  try {
+    const enrolledSim = await Enroll.findOne({ _id: enrollmentId, userId }).lean();
+
+    if (!enrolledSim) {
+      return errorMessage(res, 404, "Enrollment not found or access denied");
+    }
+    return successMessage(res, 200, "Enrolled simulation retrieved successfully", enrolledSim);
+  } catch (error) {
+    console.error("Error fetching enrolled simulation:", error);
+    return errorMessage(res, 500, "Internal Server Error", error);
+  }
+};
+
+
 // Task Submission History	View submitted tasks per simulation
 // Notifications Center	Alerts for reviews, recruiter messages, updates
 // Upload CV / Resume	For internship and simulation applications
@@ -108,7 +126,7 @@ const getCertificates = async(req,res)=>{
 
         if(!certificates || certificates.length===0) return errorMessage(res,404,"No certificates issued");
 
-        return successMessage(res,200,"Certificates retrieved successfully");
+        return successMessage(res,200,"Certificates retrieved successfully",certificates);
     } catch (error) {
     console.error("Error fetching certificates:", error);
     return errorMessage(res, 500, "Internal Server Error", error);
@@ -116,4 +134,4 @@ const getCertificates = async(req,res)=>{
 }
 // Review Feedback	View recruiter responses on tasks or simulations
 
-module.exports = {getUserProfile,getAppliedInternships,getCertificates,getEnrolledSimulations,getUserStats};
+module.exports = {getUserProfile,getAppliedInternships,getCertificates,getEnrolledSimulations,getUserStats,getEnrolledSimulationsById};
