@@ -105,14 +105,19 @@ const verifyCompany = async(req,res) =>{
         if(company.isVerified){
             return successMessage(res,200,"Recruiter already verified");
         }
+        
+        const code = await codeGenerator(10);
+        console.log("code = ", code)
 
+        company.code = code
         company.isVerified=true;
         await company.save();
 
         const verifiedCompany={
             id:company._id,
             companyName: company.companyName,
-            isVerified: isVerified
+            isVerified: isVerified,
+            companyCode: code
         }
 
         return successMessage(res, 200, "Organization verified", verifiedCompany);
@@ -168,7 +173,7 @@ const verifyRecruiter = async (req, res) => {
         const verifiedRecruiter ={
             id:recruiter._id,
             userName:recruiter.userName,
-            isVerified
+            isVerified: recruiter.isVerified
         }
         return successMessage(res, 200, "Recruiter verified", verifiedRecruiter);
 
