@@ -1,5 +1,4 @@
 import { customAlphabet } from "nanoid";
-import Company from "../models/companyModel.model";
 
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',7);
 
