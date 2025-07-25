@@ -1,5 +1,5 @@
-const {customAlphabet} = require("nanoid");
-const Company = require("../models/companyModel.model");
+import { customAlphabet } from "nanoid";
+import Company from "../models/companyModel.model";
 
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',7);
 
@@ -15,4 +15,4 @@ const hybridCompanyID= (prefix='CM') =>{
     return customID;
 }
 
-module.exports = hybridCompanyID
+export default hybridCompanyID

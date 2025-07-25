@@ -7,6 +7,8 @@ const taskSubmissionController =require("../controllers/taskSubmissionController
 const userProfileController = require("../controllers/userProfileController.controller");
 const reviewController= require("../controllers/reviewController");
 const { uploadDocument } = require("../config/fileUpload.config");
+const recruiterProfile = require("../controllers/recruiterProfileController.controller");
+
 const router= Router();
 
 //SIMULATIONS
@@ -71,5 +73,7 @@ router.get('/profile/applications',authMiddleware,authorizeRole("student"),userP
 
   // #swagger.security = [{ "bearerAuth": [] }]
 router.get('/profile/certificates',authMiddleware,authorizeRole("student"),userProfileController.getCertificates);
+
+router.post('/profile/certificates/enrollments/:enrollmentId/generate',authMiddleware,authorizeRole("student"),recruiterProfile.generateAndUploadCertificate);
 
 module.exports = router;
