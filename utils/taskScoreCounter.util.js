@@ -10,14 +10,14 @@ const Task = require("../models/taskModel.model").Task;
 const updateTaskScores = async (simulationId) => {
   try {
     const tasks = await Task.find({ simulationId }); // Fetch tasks by simulation
-    const totalTasks = tasks.length;
+    let totalTasks = tasks.length;
 
     if (totalTasks === 0) {
       console.warn("No tasks found for simulation");
       return 0;
     }
-    ++totalTasks
-    const newScore = Math.floor(100 / totalTasks);
+    
+    const newScore = Math.floor(100 / (totalTasks+1));
 
     await Task.updateMany(
       { simulationId },
