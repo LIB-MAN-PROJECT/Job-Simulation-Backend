@@ -198,7 +198,7 @@ const unverifyRecruiter = async(req,res)=>{
         const unverifiedRecruiter ={
             id:recruiter._id,
             userName:recruiter.userName,
-            isVerified
+            isVerified:false
         }
         return successMessage(res, 200, "Recruiter unverified", unverifiedRecruiter);
 
