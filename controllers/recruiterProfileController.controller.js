@@ -8,7 +8,11 @@ const Enroll = require("../models/enrollmentModel.model");
 const Certificate = require("../models/certificateModel.model");
 const generateCertificate = require("../utils/generateCertificate.util");
 const { InternshipPost, InternshipApplication } = require("../models/internshipModel.model");
-
+const sendEmail = require("../utils/sendEmail");
+const generatePdfLocally = require("../utils/generate_pdf/generatePdfLocally");
+const uploadLocalPdfToCloudinary = require("../utils/generate_pdf/uploadLocalPdfToCloudinary");
+const path = require("path");
+const generateAndDispatchCertificate = require("../utils/generate_pdf/generateAndUploadCertificate");
 
 // Dashboard Overview	Quick stats on simulations, applicants, tasks
 // Create & Manage Simulations	Post new job simulations and edit existing ones
@@ -226,6 +230,14 @@ const reviewEnrollment = async (req, res) => {
     enrollment.feedback = feedback || '';
 
     //generate certificate if reviewState is accepted
+    console.log("FeedabckState=",enrollment.feedbackState);
+
+    if(enrollment.feedbackState ==="Accepted"){
+       const certificate = await generateAndDispatchCertificate(enrollmentId);
+       console.log('Certificate generated and dispatched:', certificate);
+       await enrollment.save()
+       return successMessage(res, 201, `Tasks marks as "${feedbackState}",user certificate has been generated`,certificate);
+    }
     await enrollment.save()
     return successMessage(res, 200, `Tasks marks as "${feedbackState}"`, enrollment);
   } catch (error) {
@@ -240,7 +252,7 @@ const reviewEnrollment = async (req, res) => {
 /**
  * Generates certificate after accepted review
  */
-const sendEmail = require("../utils/sendEmail")
+
 // const generateCertForEnrollment = async (req, res) => {
 //   const { enrollmentId } = req.params;
 
@@ -278,9 +290,6 @@ const sendEmail = require("../utils/sendEmail")
 //   }
 // };
 
-const generatePdfLocally = require("../utils/generate_pdf/generatePdfLocally");
-const uploadLocalPdfToCloudinary = require("../utils/generate_pdf/uploadLocalPdfToCloudinary");
-const path = require("path");
 
 const generateAndUploadCertificate = async (req, res) => {
   const { enrollmentId } = req.params;
@@ -334,6 +343,7 @@ const generateAndUploadCertificate = async (req, res) => {
       <h2>🎓 Certificate of Completion</h2>
       <p>Hi ${userName},</p>
       <p>You’ve successfully completed <strong>${simulationName}</strong>.</p>
+       <!--- Design Download Button---->
       <p>Your certificate is ready: <a href="${certMeta.downloadUrl}" target="_blank">Click to Download</a></p>
       <br/>
       <p>Congratulations again!<br/>Upskill Team</p>
@@ -351,7 +361,7 @@ const generateAndUploadCertificate = async (req, res) => {
     console.error("🚨 Certificate generation error:", error);
     return errorMessage(res, 500, "Internal Server Error", error);
   }
-};
+}; 
 
 
 
