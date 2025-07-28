@@ -107,11 +107,11 @@ router.get('/profile/overview/simulations/:simulationId',authMiddleware,authoriz
 
 router.get('/profile/overview/simulations/participants',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getAllParticipantsByCompanyId);
 
-router.get('/profile/overview/simulations/internships',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getAllInternshipsByCompanyId);
+router.get('/profile/overview/internships',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getAllInternshipsByCompanyId);
 
-router.get('/profile/overview/simulations/internships/:internshipId',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getSingleCompanyInternshipById);
+router.get('/profile/overview/internships/:internshipId',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getSingleCompanyInternshipById);
 
-router.get('/profile/overview/simulations/internships/:internshipId/applicants',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getAllInternshipsApplicants);
+router.get('/profile/overview/internships/:internshipId/applicants',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getAllInternshipsApplicants);
 
 
 
