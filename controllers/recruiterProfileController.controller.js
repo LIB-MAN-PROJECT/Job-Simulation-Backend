@@ -135,13 +135,15 @@ const getAllParticipantsByCompanyId = async (req, res) => {
 
 //get list of all internships
 const getAllInternshipsByCompanyId = async (req, res) => {
-  const companyId = req.user.id
+  const companyId = req.user.companyId
 
   try {
-    const internships = await InternshipPost.find({ companyId }).lean();
-    if (!internships || internships.length === 0) {
-      return errorMessage(res, 404, "No internships found for this company");
-    }
+    console.log("companyId",companyId)
+    const internships = await InternshipPost.find({companyId:companyId});
+    console.log("Internships=",internships)
+    // if (!internships || internships.length === 0) {
+    //   return errorMessage(res, 404, "No internships found for this company");
+    // }
 
     return successMessage(res, 200, "Internships retrieved successfully", internships);
   } catch (error) {
