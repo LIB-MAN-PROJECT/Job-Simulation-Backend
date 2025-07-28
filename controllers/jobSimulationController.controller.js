@@ -143,7 +143,7 @@ const createTask = async(req,res)=>{
         if(!jobSim){
             return errorMessage(res,404,"Job simulation not found")
         }
-        const completionScore = await updateTaskScores(simulationId);
+        let completionScore = await updateTaskScores(simulationId);
         //create task
         let task = await Task.create({
             taskNumber,
