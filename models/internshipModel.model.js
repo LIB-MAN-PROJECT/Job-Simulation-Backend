@@ -7,7 +7,7 @@ const internshipPostSchema = new mongoose.Schema({
     companyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', required: true },
     companyName: { type: String },
     location: { type: String },
-    mode: { type: String, enum: ['remote', 'hybrid', 'in-person'] },
+    mode: { type: String, enum: ['remote', 'hybrid', 'in-person','Remote', 'Hybrid', 'In-person'] },
     applicants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     deadline: { type: Date }
 }, { timestamps: true });
