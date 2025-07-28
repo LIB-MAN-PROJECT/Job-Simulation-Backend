@@ -6,8 +6,8 @@ const Company = require("../models/companyModel.model")
 const { successMessage, errorMessage } = require("../utils/responseHandler.util");
 const uniqueCompanyId = require("../utils/uniqueCustomIdCheck.util");
 const { uploadFile } = require("../utils/uploadFile.util");
-const sendEmail = require("../utils/sendEmail");
-const welcomeUser = require("../utils/HTML Templates/welcomeUser");
+// const sendEmail = require("../utils/sendEmail");
+// const welcomeUser = require("../utils/HTML Templates/welcomeUser");
 
 
 
