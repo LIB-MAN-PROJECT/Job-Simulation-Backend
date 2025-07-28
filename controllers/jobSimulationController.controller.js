@@ -145,7 +145,7 @@ const createTask = async(req,res)=>{
         }
         const completionScore = await updateTaskScores(simulationId);
         //create task
-        const task = await Task.create({
+        let task = await Task.create({
             taskNumber,
             simulationId,
             title,
