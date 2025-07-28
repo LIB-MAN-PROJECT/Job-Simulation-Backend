@@ -163,7 +163,7 @@ const signup = async (req, res) => {
             }  
         }
 
-        await sendEmail(email,"Welcome to Career Launch",welcomeUser)
+        // await sendEmail(email,"Welcome to Career Launch",welcomeUser)
         return successMessage(res, 201, "User registered successfully",registeredUser);
     } catch (error) {
         console.log("Signup error", error)
