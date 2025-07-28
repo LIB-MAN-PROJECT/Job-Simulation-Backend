@@ -1179,7 +1179,7 @@
         }
       }
     },
-    "/api/recruiter/profile/overview/simulations/internships": {
+    "/api/recruiter/profile/overview/internships": {
       "get": {
         "description": "",
         "parameters": [
@@ -1196,7 +1196,7 @@
         }
       }
     },
-    "/api/recruiter/profile/overview/simulations/internships/{internshipId}": {
+    "/api/recruiter/profile/overview/internships/{internshipId}": {
       "get": {
         "description": "",
         "parameters": [
@@ -1219,7 +1219,7 @@
         }
       }
     },
-    "/api/recruiter/profile/overview/simulations/internships/{internshipId}/applicants": {
+    "/api/recruiter/profile/overview/internships/{internshipId}/applicants": {
       "get": {
         "description": "",
         "parameters": [
