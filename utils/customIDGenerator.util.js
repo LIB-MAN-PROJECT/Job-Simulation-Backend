@@ -1,4 +1,4 @@
-import { customAlphabet } from "nanoid";
+const {customAlphabet} = require("nanoid");
 
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',7);
 
@@ -14,4 +14,4 @@ const hybridCompanyID= (prefix='CM') =>{
     return customID;
 }
 
-export default hybridCompanyID
+module.exports= hybridCompanyID
