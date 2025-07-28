@@ -6,6 +6,8 @@ const Company = require("../models/companyModel.model")
 const { successMessage, errorMessage } = require("../utils/responseHandler.util");
 const uniqueCompanyId = require("../utils/uniqueCustomIdCheck.util");
 const { uploadFile } = require("../utils/uploadFile.util");
+const sendEmail = require("../utils/sendEmail");
+const welcomeUser = require("../utils/HTML Templates/welcomeUser");
 
 
 
@@ -87,7 +89,7 @@ const signup = async (req, res) => {
 
                   const companyNameExists =await Company.findOne({companyName});
                 if (companyNameExists) return errorMessage(res,400,"Organizational Name exists");
-                
+
                   const companyEmailExists =await Company.findOne({companyEmail});
                 if (companyEmailExists) return errorMessage(res,400,"Organizational Mail exists");
 
@@ -161,6 +163,7 @@ const signup = async (req, res) => {
             }  
         }
 
+        await sendEmail(email,"Welcome to Career Launch",welcomeUser)
         return successMessage(res, 201, "User registered successfully",registeredUser);
     } catch (error) {
         console.log("Signup error", error)
@@ -210,18 +213,32 @@ const login = async (req, res) => {
             }, process.env.JWT_SECRET);
         }
 
+        if(user.role==="recruiter"){
+           return res.status(201).json({
+                token: token,
+                message: "Login successful",
+                user: {
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    userName: user.userName,
+                    email: user.email,
+                    role: user.role,
+                    isVerified:user.isVerified,
+                }
+            });
+        }
 
-        res.status(201).json({
-            token: token,
-            message: "Login successful",
-            user: {
-                firstName: user.firstName,
-                lastName: user.lastName,
-                userName: user.userName,
-                email: user.email,
-                role: user.role
-            }
-        });
+        return res.status(201).json({
+                token: token,
+                message: "Login successful",
+                user: {
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    userName: user.userName,
+                    email: user.email,
+                    role: user.role,
+                }
+            });
 
     } catch (error) {
         console.log("Login Error", error);
