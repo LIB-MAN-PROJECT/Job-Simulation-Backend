@@ -1,6 +1,9 @@
 const {Router} = require("express");
 const { signup, login } = require("../controllers/authController.controller");
 const { uploadImage } = require("../config/fileUpload.config");
+const validateSchema = require("../middleware/validateRequest.middleware");
+const signupSchema = require("../validation/signupSchema.schema");
+const loginSchema = require("../validation/loginSchema.schema");
 const router = Router();
 
 
@@ -22,7 +25,7 @@ const router = Router();
  *       200:
  *         description: File uploaded successfully
  */
-router.post("/signup",uploadImage.single("file"),signup);
-router.post("/login",login);
+router.post("/signup",uploadImage.single("file"),validateSchema(signupSchema),signup);
+router.post("/login",validateSchema(loginSchema),login);
 
 module.exports= router;
