@@ -5,6 +5,10 @@ const companyController= require("../controllers/companyController.controller");
 const { authMiddleware,authorizeRole,allowedRoles } = require("../middleware/authMiddleware.middleware");
 const {uploadImage,uploadDocument}= require("../config/fileUpload.config");
 const  recruiterProfile= require("../controllers/recruiterProfileController.controller");
+const validateSchema = require("../middleware/validateRequest.middleware");
+const createSimulationSchema = require("../validation/createsimulation.schema");
+const createTaskSchema = require("../validation/createTask.schema");
+const createInternshipPostSchema = require("../validation/createInternship.schema");
 
 const router = Router();
 
@@ -38,7 +42,7 @@ router.put('/edit-company/:companyId',uploadImage.single("file"),authMiddleware,
  *         description: File uploaded successfully
  */
   // #swagger.security = [{ "bearerAuth": [] }]
-router.post('/create-job-simulation',uploadImage.single("file"),
+router.post('/create-job-simulation',uploadImage.single("file"),validateSchema(createSimulationSchema),
 authMiddleware,authorizeRole("recruiter"),jobSimulationController.createJobSim);
 
 /**
@@ -69,7 +73,7 @@ authorizeRole("recruiter"),jobSimulationController.deleteJobSimById);
 //TASK ROUTES
   // #swagger.security = [{ "bearerAuth": [] }]
 router.post('/create-task/:simulationId',authMiddleware,
-authorizeRole("recruiter"),jobSimulationController.createTask);
+authorizeRole("recruiter"),validateSchema(createTaskSchema),jobSimulationController.createTask);
 
   // #swagger.security = [{ "bearerAuth": [] }]
 router.put('/edit-task/:taskId',authMiddleware,authorizeRole("recruiter"),jobSimulationController.editTask);
@@ -80,7 +84,7 @@ router.delete('/delete-task/:taskId',authMiddleware,authorizeRole("recruiter"),j
 //INTERNSHIP ROUTES
   // #swagger.security = [{ "bearerAuth": [] }]
 router.post('/create-internship',authMiddleware,
-authorizeRole("recruiter"),internshipController.createInternshipPost);
+authorizeRole("recruiter"),validateSchema(createInternshipPostSchema),internshipController.createInternshipPost);
 
   // #swagger.security = [{ "bearerAuth": [] }]
 router.put('/edit-internship/:internshipId',authMiddleware,
