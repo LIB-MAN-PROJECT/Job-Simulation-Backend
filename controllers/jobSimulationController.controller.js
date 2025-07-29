@@ -264,9 +264,13 @@ const searchSimulations = async(req,res)=>{
       
         if(duration) filter.duration= {$regex:duration,$options:"i"};
         
-        if(isHiring) filter.isHiring= {$regex:isHiring,$options:"i"};
-        
-        if(isPublished) filter.isPublished= {$regex:isPublished,$options:"i"};
+    // Boolean filters (convert string to actual Boolean)
+        if (typeof isHiring !== 'undefined') {
+        filter.isHiring = isHiring === 'true';
+        }
+        if (typeof isPublished !== 'undefined') {
+        filter.isPublished = isPublished === 'true';
+        }
 
         if(companyName) filter.companyName= {$regex:companyName,$options:"i"};
 
