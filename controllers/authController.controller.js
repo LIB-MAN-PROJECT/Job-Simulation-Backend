@@ -19,9 +19,9 @@ const signup = async (req, res) => {
         const { firstName, lastName, userName, email, password, role,companyCustomId,companyCode,companyName,companyEmail,description,website } = req.body
 
         // Check user essentials
-        if (!firstName || !lastName || !userName || !email || !password) {
-        return errorMessage(res, 400, "Missing required user fields");
-        }
+        // if (!firstName || !lastName || !userName || !email || !password) {
+        // return errorMessage(res, 400, "Missing required user fields");
+        // }
 
         const userExists = await User.findOne({ userName });
         if (userExists) {
