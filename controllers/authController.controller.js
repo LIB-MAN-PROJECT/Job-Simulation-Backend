@@ -7,7 +7,7 @@ const { successMessage, errorMessage } = require("../utils/responseHandler.util"
 const uniqueCompanyId = require("../utils/uniqueCustomIdCheck.util");
 const { uploadFile } = require("../utils/uploadFile.util");
 const sendEmail = require("../utils/sendEmail");
-const welcomeUser = require("../utils/HTML Templates/welcomeUser");
+const welcomeUser = require("../utils/HTML_Templates/welcomeUser");
 const { default: mongoose } = require("mongoose");
 
 
