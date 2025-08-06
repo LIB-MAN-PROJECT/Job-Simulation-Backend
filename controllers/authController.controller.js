@@ -6,8 +6,9 @@ const Company = require("../models/companyModel.model")
 const { successMessage, errorMessage } = require("../utils/responseHandler.util");
 const uniqueCompanyId = require("../utils/uniqueCustomIdCheck.util");
 const { uploadFile } = require("../utils/uploadFile.util");
-// const sendEmail = require("../utils/sendEmail");
-// const welcomeUser = require("../utils/HTML Templates/welcomeUser");
+const sendEmail = require("../utils/sendEmail");
+const welcomeUser = require("../utils/HTML Templates/welcomeUser");
+const { default: mongoose } = require("mongoose");
 
 
 
@@ -15,6 +16,9 @@ const { uploadFile } = require("../utils/uploadFile.util");
 //creating a new user in db
 
 const signup = async (req, res) => {
+const session= await mongoose.startSession();
+session.startTransaction();
+    //helper function  to deal with transaction error
     try {
         const { firstName, lastName, userName, email, password, role,companyCustomId,companyCode,companyName,companyEmail,description,website } = req.body
 
@@ -39,10 +43,10 @@ const signup = async (req, res) => {
             // });
         }
         
-      
-
+        //hashing password
         const hashedpassword = await bcrypt.hash(password, 10);
 
+        
         let user;
         let company;
         if (role === "recruiter" ){
@@ -58,24 +62,24 @@ const signup = async (req, res) => {
                     }
 
                     //create recruiter
-                    user = await User.create({
-                        firstName:firstName.trim(),
-                        lastName:lastName.trim(),
-                        userName:userName.trim(),
-                        email:email.toLowerCase().trim(),
+                    user = await User.create([{
+                        firstName:firstName,
+                        lastName:lastName,
+                        userName:userName,
+                        email:email.toLowerCase(),
                         password: hashedpassword,
-                        role:role.trim(),
+                        role:role,
                         companyId: company._id,
                         companyName: company.companyName,
                         isVerified: false,
-                    });
+                    }],{session});
 
                     console.log("User=",user._id);
                     console.log("user._id");
                     
                     //add recruiter to company
                     company.recruiters.push(user._id);
-                    await company.save();
+                    await company.save({session});
                 }
                 else{
                     return errorMessage(res,404,"Organization not found.")
@@ -105,7 +109,7 @@ const signup = async (req, res) => {
 
                 // const uploadedFile = await uploadFile(req, req.file.path, "/upskill/companyLogos",res);
 
-                company = await Company.create({
+                company = await Company.create([{
                 companyName,
                 companyCode,
                 companyEmail,
@@ -115,10 +119,10 @@ const signup = async (req, res) => {
                 // logoPublicId: uploadedFile.public_id,
                 website,
                 isVerified:false
-                });
+                }],{session});
 
                 //create recruiter
-                user = await User.create({
+                user = await User.create([{
                     firstName,
                     lastName,
                     userName,
@@ -128,18 +132,18 @@ const signup = async (req, res) => {
                     companyId: company._id,
                     companyName,
                     isVerified: false,
-                });
+                }],{session});
             }
         }else{
             // create user or admin
-            user = await User.create({
+            user = await User.create([{
                 firstName,
                 lastName,
                 userName,
                 email,
                 password: hashedpassword,
                 role,
-            });
+            }],{session});
         }
 
         let registeredUser;
@@ -163,10 +167,24 @@ const signup = async (req, res) => {
             }  
         }
 
-        // await sendEmail(email,"Welcome to Career Launch",welcomeUser)
+        let welcomeEmail=welcomeUser(registeredUser.userName,registeredUser.role);
+        console.log("user Email",registeredUser.email);
+        await sendEmail(
+            {to: registeredUser.email,
+            subject: "Welcome to Career Launch",
+            html:welcomeEmail}
+            );
+
+        await session.commitTransaction();
+        session.endSession();
+
         return successMessage(res, 201, "User registered successfully",registeredUser);
     } catch (error) {
-        console.log("Signup error", error)
+        console.log("Signup error", error);
+        if (session?.inTransaction()){
+            await session.abortTransaction();  
+        }
+        session?.endSession();
         return errorMessage(res, 500, "Internal Server Error", error);
     }
 }
