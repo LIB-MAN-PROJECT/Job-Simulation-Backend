@@ -191,7 +191,7 @@ const deleteTask = async(req,res)=>{
     const {taskId}=req.params;
 //TODO: prevent deletion if task is attempted by user
     try {
-        const task=Task.findByIdAndDelete(taskId);
+        const task= await Task.findByIdAndDelete(taskId);
         await updateTaskScores(taskId)
         if (!task){
            return errorMessage(res,404,"Task not found");
@@ -206,7 +206,8 @@ const deleteTask = async(req,res)=>{
 
 const viewAllJobSims = async(req,res)=>{
     try {
-        const jobSims = await JobSim.find();
+        const jobSims = await JobSim.find({},{participants:false,companyId:false,imagePublicId:false,
+        reviews:false});
  
         return successMessage(res,200,"Simulations retrieved successfully",jobSims);
     } catch (error) {
@@ -227,7 +228,7 @@ const viewJobSimsById = async (req, res) => {
   }
 
   try {
-    const jobSims = await JobSim.findById(simulationId).populate("tasks").lean();
+    const jobSims = await JobSim.findById(simulationId,{participants:false,companyId:false,imagePublicId:false,}).populate("tasks").lean();
     if (!jobSims) {
       return errorMessage(res, 404, "Job Simulation not found");
     }
@@ -274,7 +275,7 @@ const searchSimulations = async(req,res)=>{
 
         if(companyName) filter.companyName= {$regex:companyName,$options:"i"};
 
-        const simulations = await JobSim.find(filter).sort({ createdAt: -1 });
+        const simulations = await JobSim.find(filter,{participants:false,companyId:false,imagePublicId:false,}).sort({ createdAt: -1 });
 
         return successMessage(res, 200, "Simulations found", simulations);
 
