@@ -7,16 +7,24 @@ const signupSchema = Joi.object({
     email: Joi.string().email().trim().required(),
     password: Joi.string().min(6).required(),
     role: Joi.string().valid("student", "recruiter", "admin").required(),
-    companyName: Joi.string().trim().optional(),
-    companyCustomId:Joi.string().trim().optional(),
-    companyCode: Joi.string().trim().when('role', {
-    is: 'recruiter',
-    then: Joi.required(),
-    otherwise: Joi.forbidden()
+    companyAction: Joi.string().allow("").trim(),
+    companyName: Joi.string().allow("").trim().optional(),
+    companyCustomId:Joi.string().allow("").trim().optional(),
+    // companyCode: Joi.string().allow("").trim().when('role', {
+    // is: 'recruiter',
+    // then: Joi.required(),
+    // }),
+    companyCode:Joi.alternatives().conditional('role',{
+        is:'recruiter',
+        then: Joi.string().trim().required().not("").messages({
+            "any.invalid":"Company Code cannot be empty",
+            "string.empty":"Company Code is required"
+        }),
+        otherwise:Joi.string().trim().allow("").optional()
     }),
-    companyEmail: Joi.string().email().trim().optional(),
-    description: Joi.string().trim().min(1).optional(),
-    website: Joi.string().uri().optional(),
+    companyEmail: Joi.string().email().allow("").trim().optional(),
+    description: Joi.string().allow("").trim().optional(),
+    website: Joi.string().uri().allow("").optional(),
 });
 
 module.exports= signupSchema
