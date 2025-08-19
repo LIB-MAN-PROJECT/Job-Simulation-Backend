@@ -207,7 +207,7 @@ const deleteTask = async(req,res)=>{
 const viewAllJobSims = async(req,res)=>{
     try {
         const jobSims = await JobSim.find({},{participants:false,companyId:false,imagePublicId:false,
-        reviews:false});
+        reviews:false,createdAt:false,updatedAt:false});
  
         return successMessage(res,200,"Simulations retrieved successfully",jobSims);
     } catch (error) {
@@ -266,16 +266,23 @@ const searchSimulations = async(req,res)=>{
         if(duration) filter.duration= {$regex:duration,$options:"i"};
         
     // Boolean filters (convert string to actual Boolean)
-        if (typeof isHiring !== 'undefined') {
+        if (typeof isHiring === 'true') {
         filter.isHiring = isHiring === 'true';
         }
-        if (typeof isPublished !== 'undefined') {
+        else if (typeof isHiring ==="false") {
+        filter.isHiring = isHiring === 'false';
+        }
+
+        if (typeof isPublished === 'true') {
         filter.isPublished = isPublished === 'true';
+        }
+        if (typeof isPublished === 'false') {
+        filter.isPublished = isPublished === 'false';
         }
 
         if(companyName) filter.companyName= {$regex:companyName,$options:"i"};
 
-        const simulations = await JobSim.find(filter,{participants:false,companyId:false,imagePublicId:false,}).sort({ createdAt: -1 });
+        const simulations = await JobSim.find(filter,{participants:false,companyId:false,imagePublicId:false,reviews:false}).sort({ createdAt: -1 });
 
         return successMessage(res, 200, "Simulations found", simulations);
 
