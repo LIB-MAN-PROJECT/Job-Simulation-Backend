@@ -255,7 +255,7 @@ const viewJobSimsById = async (req, res) => {
 const searchSimulations = async(req,res)=>{
     const { title, field, level, duration, isHiring, isPublished,companyName } = req.query;
 
-    const filter={};
+    let filter={};
     try {
         if(title) filter.title= {$regex:title,$options:"i"};
         
@@ -266,22 +266,24 @@ const searchSimulations = async(req,res)=>{
         if(duration) filter.duration= {$regex:duration,$options:"i"};
         
     // Boolean filters (convert string to actual Boolean)
-        if (typeof isHiring === 'true') {
-        filter.isHiring = isHiring === 'true';
+        if (isHiring === 'true') {
+        filter.isHiring ='true';
         }
-        else if (typeof isHiring ==="false") {
-        filter.isHiring = isHiring === 'false';
+        else if(isHiring === 'false'){
+            filter.isHiring ='false'
         }
-
-        if (typeof isPublished === 'true') {
-        filter.isPublished = isPublished === 'true';
+        
+        if (isPublished === 'true') {
+        filter.isPublished ='true';
         }
-        if (typeof isPublished === 'false') {
-        filter.isPublished = isPublished === 'false';
+        if (isPublished === 'false') {
+        filter.isPublished ='false';
         }
-
+       
         if(companyName) filter.companyName= {$regex:companyName,$options:"i"};
 
+        // console.log("typeof isHiring =", typeof title)
+        // console.log("filter=",filter)
         const simulations = await JobSim.find(filter,{participants:false,companyId:false,imagePublicId:false,reviews:false}).sort({ createdAt: -1 });
 
         return successMessage(res, 200, "Simulations found", simulations);
