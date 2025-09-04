@@ -12,38 +12,61 @@ const recruiterProfile = require("../controllers/recruiterProfileController.cont
 const router= Router();
 
 //SIMULATIONS
-router.get('/view-all-simulations',jobSimulationController.viewAllJobSims)
+router.get('/view-all-simulations',
+// #swagger.tags=['Users']
+jobSimulationController.viewAllJobSims)
 
-  // #swagger.security = [{ "bearerAuth": [] }]
-router.get('/view-simulations/:simulationId',authMiddleware,jobSimulationController.viewJobSimsById);
+  
+router.get('/view-simulations/:simulationId',authMiddleware,
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags=['Users']
+jobSimulationController.viewJobSimsById);
 
 router.get('/simulations/search',jobSimulationController.searchSimulations);
 
 //ENROLLMENT
-  // #swagger.security = [{ "bearerAuth": [] }]
-router.post('/simulation/:simulationId/enroll',authMiddleware,authorizeRole("student"),enrollmentController.enrollInJobSim);
+router.post('/simulation/:simulationId/enroll',authMiddleware,authorizeRole("student"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags=['Users']
+enrollmentController.enrollInJobSim);
 
 //Unenroll
 
-router.delete('/profile/simulation/:userid/simulations/:simulationId',enrollmentController.unenrollInJobSim);
+router.delete('/profile/simulation/:userid/simulations/:simulationId', // #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags=['Users']
+enrollmentController.unenrollInJobSim);
 
 //Submitting tasks
-  // #swagger.security = [{ "bearerAuth": [] }]
-router.post('/simulation/:simulationId/task/:taskId/submit-task',authMiddleware,authorizeRole("student"),uploadDocument.single("file"),taskSubmissionController.submitTask);
+router.post('/simulation/:simulationId/task/:taskId/submit-task',authMiddleware,authorizeRole("student"),uploadDocument.single("file"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags=['Users']
+taskSubmissionController.submitTask);
 
 //Editing Submitted task
   // #swagger.security = [{ "bearerAuth": [] }]
-router.put('/simulation/:simulationId/task/:taskId/submission/:taskSubmissonId/edit-submission',authMiddleware,authorizeRole("student"),uploadDocument.single("file"),taskSubmissionController.editSubmittedTask);
+router.put('/simulation/:simulationId/task/:taskId/submission/:taskSubmissonId/edit-submission',authMiddleware,authorizeRole("student"),uploadDocument.single("file"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags=['Users']
+taskSubmissionController.editSubmittedTask);
 
-  // #swagger.security = [{ "bearerAuth": [] }]
-router.delete('/simulation/:simulationId/task/:taskId/submission/:taskSubmissonId/delete-submission',authMiddleware,authorizeRole("student"),taskSubmissionController.deleteSubmittedTask);
+  //Deleting submitted task
+router.delete('/simulation/:simulationId/task/:taskId/submission/:taskSubmissonId/delete-submission',authMiddleware,authorizeRole("student"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags=['Users']
+taskSubmissionController.deleteSubmittedTask);
 
 //REVIEWS
-  // #swagger.security = [{ "bearerAuth": [] }]
-router.post('/simulation/:simulationId/create-review',authMiddleware,authorizeRole("student"),reviewController.sendReview);
+  // Create review
+router.post('/simulation/:simulationId/create-review',authMiddleware,authorizeRole("student"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags=['Users']
+reviewController.sendReview);
 
-  // #swagger.security = [{ "bearerAuth": [] }]
-router.put('/simulation/:simulationId/:reviewId/edit-review',authMiddleware,authorizeRole("student"),reviewController.editReview);
+  // Edit review
+router.put('/simulation/:simulationId/:reviewId/edit-review',authMiddleware,authorizeRole("student"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags=['Users']
+reviewController.editReview);
 
 
 //INTERNSHIP POSTS
@@ -74,6 +97,5 @@ router.get('/profile/applications',authMiddleware,authorizeRole("student"),userP
   // #swagger.security = [{ "bearerAuth": [] }]
 router.get('/profile/certificates',authMiddleware,authorizeRole("student"),userProfileController.getCertificates);
 
-router.post('/profile/certificates/enrollments/:enrollmentId/generate',authMiddleware,authorizeRole("student"),recruiterProfile.generateAndUploadCertificate);
 
 module.exports = router;
