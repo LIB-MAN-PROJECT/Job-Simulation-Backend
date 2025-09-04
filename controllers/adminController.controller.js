@@ -21,19 +21,19 @@ const { InternshipPost,InternshipApplication } = require("../models/internshipMo
 const getAppAnalytics = async (req, res) => {
   try {
     const totalUsers = await User.countDocuments();
-    if (totalUsers === 0) return errorMessage(res, 404, "No users found");
+    // if (totalUsers === 0) return errorMessage(res, 404, "No users found");
 
     const totalJobSims = await JobSim.countDocuments();
-    if (totalJobSims === 0) return errorMessage(res, 404, "No job simulations found");
+    // if (totalJobSims === 0) return errorMessage(res, 404, "No job simulations found");
 
     const totalCompanies = await Company.countDocuments();
-    if (totalCompanies === 0) return errorMessage(res, 404, "No companies using the service");
+    // if (totalCompanies === 0) return errorMessage(res, 404, "No companies using the service");
 
     const totalInternships = await InternshipPost.countDocuments();
-    if (totalInternships === 0) return errorMessage(res, 404, "No internships posted");
+    // if (totalInternships === 0) return errorMessage(res, 404, "No internships posted");
 
     const totalInternshipApplications = await InternshipApplication.countDocuments();
-    if (totalInternshipApplications === 0) return errorMessage(res, 404, "No internship applications found");
+    // if (totalInternshipApplications === 0) return errorMessage(res, 404, "No internship applications found");
 
     return successMessage(res, 200, "Application analytics retrieved successfully", {
       totalUsers,
