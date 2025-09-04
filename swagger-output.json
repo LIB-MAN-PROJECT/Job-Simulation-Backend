@@ -119,6 +119,7 @@
         "tags": [
           "Users"
         ],
+        "summary": "View All Simulations",
         "description": "",
         "responses": {
           "default": {
@@ -132,6 +133,7 @@
         "tags": [
           "Users"
         ],
+        "summary": "View specific simulation by its document id",
         "description": "",
         "parameters": [
           {
@@ -160,6 +162,7 @@
     },
     "/api/user/simulations/search": {
       "get": {
+        "summary": "Search for simulations via different metrics",
         "description": "",
         "parameters": [
           {
@@ -210,6 +213,7 @@
         "tags": [
           "Users"
         ],
+        "summary": "Enroll for simulation",
         "description": "",
         "parameters": [
           {
@@ -241,6 +245,7 @@
         "tags": [
           "Users"
         ],
+        "summary": "Uneroll simulation",
         "description": "",
         "parameters": [
           {
@@ -273,7 +278,8 @@
         "tags": [
           "Users"
         ],
-        "description": "",
+        "summary": "Submit tasks",
+        "description": "Only documents should be submitted",
         "parameters": [
           {
             "name": "simulationId",
@@ -310,6 +316,7 @@
         "tags": [
           "Users"
         ],
+        "summary": "Edit submitted task",
         "description": "",
         "parameters": [
           {
@@ -353,6 +360,7 @@
         "tags": [
           "Users"
         ],
+        "summary": "delete task",
         "description": "",
         "parameters": [
           {
@@ -396,6 +404,7 @@
         "tags": [
           "Users"
         ],
+        "summary": "Create & send review",
         "description": "",
         "parameters": [
           {
@@ -442,6 +451,7 @@
         "tags": [
           "Users"
         ],
+        "summary": "Edit review",
         "description": "",
         "parameters": [
           {
