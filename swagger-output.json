@@ -116,6 +116,9 @@
     },
     "/api/user/view-all-simulations": {
       "get": {
+        "tags": [
+          "Users"
+        ],
         "description": "",
         "responses": {
           "default": {
@@ -126,6 +129,9 @@
     },
     "/api/user/view-simulations/{simulationId}": {
       "get": {
+        "tags": [
+          "Users"
+        ],
         "description": "",
         "parameters": [
           {
@@ -144,7 +150,12 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/user/simulations/search": {
@@ -196,6 +207,9 @@
     },
     "/api/user/simulation/{simulationId}/enroll": {
       "post": {
+        "tags": [
+          "Users"
+        ],
         "description": "",
         "parameters": [
           {
@@ -214,11 +228,19 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/user/profile/simulation/{userid}/simulations/{simulationId}": {
       "delete": {
+        "tags": [
+          "Users"
+        ],
         "description": "",
         "parameters": [
           {
@@ -238,11 +260,19 @@
           "default": {
             "description": ""
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/user/simulation/{simulationId}/task/{taskId}/submit-task": {
       "post": {
+        "tags": [
+          "Users"
+        ],
         "description": "",
         "parameters": [
           {
@@ -267,11 +297,19 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/user/simulation/{simulationId}/task/{taskId}/submission/{taskSubmissonId}/edit-submission": {
       "put": {
+        "tags": [
+          "Users"
+        ],
         "description": "",
         "parameters": [
           {
@@ -302,11 +340,19 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/user/simulation/{simulationId}/task/{taskId}/submission/{taskSubmissonId}/delete-submission": {
       "delete": {
+        "tags": [
+          "Users"
+        ],
         "description": "",
         "parameters": [
           {
@@ -337,11 +383,19 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/user/simulation/{simulationId}/create-review": {
       "post": {
+        "tags": [
+          "Users"
+        ],
         "description": "",
         "parameters": [
           {
@@ -375,11 +429,19 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/user/simulation/{simulationId}/{reviewId}/edit-review": {
       "put": {
+        "tags": [
+          "Users"
+        ],
         "description": "",
         "parameters": [
           {
@@ -419,7 +481,12 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/user/view-all-internships": {

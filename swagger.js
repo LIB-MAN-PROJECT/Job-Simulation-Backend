@@ -13,7 +13,7 @@ const doc={
         type: "http",
         scheme: "bearer",
         bearerFormat: "JWT",
-      },
+      },    
     },
   },
 //   security: [{ bearerAuth: [] }],
