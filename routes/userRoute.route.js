@@ -14,32 +14,41 @@ const router= Router();
 //SIMULATIONS
 router.get('/view-all-simulations',
 // #swagger.tags=['Users']
+// #swagger.summary = 'View All Simulations'
 jobSimulationController.viewAllJobSims)
 
   
 router.get('/view-simulations/:simulationId',authMiddleware,
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.tags=['Users']
+// #swagger.summary='View specific simulation by its document id'
 jobSimulationController.viewJobSimsById);
 
-router.get('/simulations/search',jobSimulationController.searchSimulations);
+router.get('/simulations/search',
+//#swagger.summary='Search for simulations via different metrics'
+jobSimulationController.searchSimulations);
 
 //ENROLLMENT
 router.post('/simulation/:simulationId/enroll',authMiddleware,authorizeRole("student"),
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.tags=['Users']
+// #swagger.summary='Enroll for simulation'
 enrollmentController.enrollInJobSim);
 
 //Unenroll
 
-router.delete('/profile/simulation/:userid/simulations/:simulationId', // #swagger.security = [{ "bearerAuth": [] }]
+router.delete('/profile/simulation/:userid/simulations/:simulationId', 
+// #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.tags=['Users']
+// #swagger.summary='Uneroll simulation'
 enrollmentController.unenrollInJobSim);
 
 //Submitting tasks
 router.post('/simulation/:simulationId/task/:taskId/submit-task',authMiddleware,authorizeRole("student"),uploadDocument.single("file"),
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.tags=['Users']
+// #swagger.summary='Submit tasks'
+// #swagger.description='Only documents should be submitted'
 taskSubmissionController.submitTask);
 
 //Editing Submitted task
@@ -47,12 +56,14 @@ taskSubmissionController.submitTask);
 router.put('/simulation/:simulationId/task/:taskId/submission/:taskSubmissonId/edit-submission',authMiddleware,authorizeRole("student"),uploadDocument.single("file"),
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.tags=['Users']
+// #swagger.summary='Edit submitted task'
 taskSubmissionController.editSubmittedTask);
 
   //Deleting submitted task
 router.delete('/simulation/:simulationId/task/:taskId/submission/:taskSubmissonId/delete-submission',authMiddleware,authorizeRole("student"),
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.tags=['Users']
+// #swagger.summary='delete task'
 taskSubmissionController.deleteSubmittedTask);
 
 //REVIEWS
@@ -60,12 +71,14 @@ taskSubmissionController.deleteSubmittedTask);
 router.post('/simulation/:simulationId/create-review',authMiddleware,authorizeRole("student"),
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.tags=['Users']
+// #swagger.summary = 'Create & send review'
 reviewController.sendReview);
 
   // Edit review
 router.put('/simulation/:simulationId/:reviewId/edit-review',authMiddleware,authorizeRole("student"),
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.tags=['Users']
+// #swagger.summary= 'Edit review'
 reviewController.editReview);
 
 
