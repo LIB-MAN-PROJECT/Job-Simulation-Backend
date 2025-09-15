@@ -63,7 +63,7 @@ taskSubmissionController.editSubmittedTask);
 router.delete('/simulation/:simulationId/task/:taskId/submission/:taskSubmissonId/delete-submission',authMiddleware,authorizeRole("student"),
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.tags=['Users']
-// #swagger.summary='delete task'
+// #swagger.summary='Delete task'
 taskSubmissionController.deleteSubmittedTask);
 
 //REVIEWS
@@ -88,9 +88,17 @@ router.get('/view-all-internships',internshipController.viewAllInternshipPosts);
 router.get('/view-internships/:internshipId',internshipController.viewInternshipPostById);
 
   // #swagger.security = [{ "bearerAuth": [] }]
-router.post('/view-internships/:internshipId/apply',authMiddleware,authorizeRole("student"),uploadDocument.single("file"),internshipController.applyForInternship);
+router.post('/view-internships/:internshipId/apply',authMiddleware,authorizeRole("student"),uploadDocument.single("file"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags=['Users']
+// #swagger.summary= 'Internship Application'
+internshipController.applyForInternship);
 
-router.get('/internships/search',internshipController.searchInternships);
+router.get('/internships/search',
+// #swagger.security=[{"bearerAuth": [] }]
+// #swagger.tags=['Users']
+// #swagger.summary='Backend Search & Flitering'
+internshipController.searchInternships);
 
 
 //USER PROFILE
