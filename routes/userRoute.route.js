@@ -103,20 +103,35 @@ internshipController.searchInternships);
 
 //USER PROFILE
 
-  // #swagger.security = [{ "bearerAuth": [] }]
-router.get('/profile/stats',authMiddleware,authorizeRole("student"),userProfileController.getUserStats);
+router.get('/profile/stats',authMiddleware,authorizeRole("student"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags=['Users']
+// #swagger.summary = 'View User Profile'
+userProfileController.getUserStats);
 
-  // #swagger.security = [{ "bearerAuth": [] }]
-router.get('/profile/account',authMiddleware,authorizeRole("student"),userProfileController.getUserProfile);
+router.get('/profile/account',authMiddleware,authorizeRole("student"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags=['Users']
+// #swagger.summary = 'View User Account Details'
+userProfileController.getUserProfile);
 
-  // #swagger.security = [{ "bearerAuth": [] }]
-router.get('/profile/enrollments',authMiddleware,authorizeRole("student"),userProfileController.getEnrolledSimulations);
+router.get('/profile/enrollments',authMiddleware,authorizeRole("student"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags=['Users']
+// #swagger.summary = 'View Simulations enrolled in'
+userProfileController.getEnrolledSimulations);
 
-  // #swagger.security = [{ "bearerAuth": [] }]
-router.get('/profile/applications',authMiddleware,authorizeRole("student"),userProfileController.getAppliedInternships);
+router.get('/profile/applications',authMiddleware,authorizeRole("student"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags=['Users']
+// #swagger.summary = 'View Internships applied for'
+userProfileController.getAppliedInternships);
 
-  // #swagger.security = [{ "bearerAuth": [] }]
-router.get('/profile/certificates',authMiddleware,authorizeRole("student"),userProfileController.getCertificates);
+router.get('/profile/certificates',authMiddleware,authorizeRole("student"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags=['Users']
+// #swagger.summary = 'View User Certificates'
+userProfileController.getCertificates);
 
 
 module.exports = router;
