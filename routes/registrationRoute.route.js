@@ -25,7 +25,13 @@ const router = Router();
  *       200:
  *         description: File uploaded successfully
  */
-router.post("/signup",uploadImage.single("file"),validateSchema(signupSchema),signup);
-router.post("/login",validateSchema(loginSchema),login);
+router.post("/signup",uploadImage.single("file"),validateSchema(signupSchema),
+// #swagger.tags=['Users','Recruiters', 'Admins']
+// #swagger.summary = 'Sign Up'
+signup);
+router.post("/login",validateSchema(loginSchema),
+// #swagger.tags=['Users','Recruiters', 'Admins']
+// #swagger.summary = 'Log In'
+login);
 
 module.exports= router;
