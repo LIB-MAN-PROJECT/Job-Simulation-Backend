@@ -13,7 +13,7 @@ const router= Router();
 
 //SIMULATIONS
 router.get('/view-all-simulations',
-// #swagger.tags=['Users']
+// #swagger.tags=['Users','Recruiters','Admins']
 // #swagger.summary = 'View All Simulations'
 jobSimulationController.viewAllJobSims)
 
