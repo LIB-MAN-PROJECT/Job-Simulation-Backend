@@ -266,8 +266,48 @@ const login = async (req, res) => {
     }
 }
 
+//TODO: Add email function
+const newSignUp = async(req,res)=>{
+    try {
+        const {firstName,lastName,userName,password,email,role}= req.body
+
+        //check for username existence
+        const userExists = await User.findOne({userName});
+
+        if (userExists){
+            return errorMessage(res,400,"User credentials already exists")
+        }
+
+        const emailExists = await User.findOne({email});
+
+        if (emailExists){
+            return errorMessage(res,400,"User credentials already exists")
+        }
+
+        //hashing password
+        const hashedpassword = await bcrypt.hash(password,10);
+
+        //create user in database
+
+        const user = User.create({
+            firstName,
+            lastName,
+            userName,
+            email,
+            hashedpassword,
+            role
+        });
+
+        //show success message
+        return successMessage(res,201,"User registered successfully",user);
+    } catch (error) {
+        console.error("signup error",error);
+        return errorMessage(res,500,"Internal Server Error",error)
+    }
+}
 
 module.exports = {
     signup,
-    login
+    login,
+    newSignUp
 }
