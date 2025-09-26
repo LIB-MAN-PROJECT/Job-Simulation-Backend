@@ -298,6 +298,14 @@ const newSignUp = async(req,res)=>{
             role
         });
 
+        //send email to user
+        let welcomeEmail=welcomeUser(user.userName,user.role);
+        await sendEmail({
+            to: user.email,
+            subject: "Welcome to Career Launc",
+            html: welcomeEmail
+        });
+
         //show success message
         return successMessage(res,201,"User registered successfully",user);
     } catch (error) {
