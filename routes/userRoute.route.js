@@ -7,7 +7,6 @@ const taskSubmissionController =require("../controllers/taskSubmissionController
 const userProfileController = require("../controllers/userProfileController.controller");
 const reviewController= require("../controllers/reviewController");
 const { uploadDocument } = require("../config/fileUpload.config");
-const recruiterProfile = require("../controllers/recruiterProfileController.controller");
 
 const router= Router();
 
