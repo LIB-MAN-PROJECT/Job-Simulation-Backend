@@ -167,7 +167,7 @@ router.get('/profile/overview/simulations/:simulationId',authMiddleware,authoriz
 // #swagger.tags = ['Recruiters']
 // #swagger.summary = 'View Specific Simulation '
 recruiterProfile.getSingleCompanySimulationWithTasks);
-no
+
 router.get('/profile/overview/simulations/participants',authMiddleware,authorizeRole("recruiter"),
 // #swagger.security = [{"bearerAuth": [] }]
 // #swagger.tags = ['Recruiters']
