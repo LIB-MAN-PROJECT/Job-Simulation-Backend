@@ -13,12 +13,18 @@ const createInternshipPostSchema = require("../validation/createInternship.schem
 const router = Router();
 
 //COMPANY ROUTES
-  // #swagger.security = [{ "bearerAuth": [] }]
 router.post('/create-company',uploadImage.single("file"),authMiddleware,
-authorizeRole("recruiter"),companyController.createCompany);
+authorizeRole("recruiter"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags = ['Recruiters']
+// #swagger.summary = 'Create New Company(Organization)'
+companyController.createCompany);
 
-  // #swagger.security = [{ "bearerAuth": [] }]
-router.put('/edit-company/:companyId',uploadImage.single("file"),authMiddleware,authorizeRole("recruiter"),companyController.editCompany);
+router.put('/edit-company/:companyId',uploadImage.single("file"),authMiddleware,authorizeRole("recruiter"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags = ['Recruiters']
+// #swagger.summary = 'Edit Organizational Data'
+companyController.editCompany);
 
 //JOB SIM ROUTES
 
@@ -41,9 +47,12 @@ router.put('/edit-company/:companyId',uploadImage.single("file"),authMiddleware,
  *       200:
  *         description: File uploaded successfully
  */
-  // #swagger.security = [{ "bearerAuth": [] }]
 router.post('/create-job-simulation',uploadImage.single("file"),validateSchema(createSimulationSchema),
-authMiddleware,authorizeRole("recruiter"),jobSimulationController.createJobSim);
+authMiddleware,authorizeRole("recruiter"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags = ['Recruiters']
+// #swagger.summary='Create Job simulation'
+jobSimulationController.createJobSim);
 
 /**
  * @swagger
@@ -63,59 +72,125 @@ authMiddleware,authorizeRole("recruiter"),jobSimulationController.createJobSim);
  *         description: File uploaded successfully
  */
 
-  // #swagger.security = [{ "bearerAuth": [] }]
 router.put('/edit-job-simulation/:simulationId',uploadImage.single("file"),
-authMiddleware,authorizeRole("recruiter"),jobSimulationController.editJobSimById);
-  // #swagger.security = [{ "bearerAuth": [] }]
+authMiddleware,authorizeRole("recruiter"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags=['Recruiters']
+// #swagger.summary = 'Edit Job Simulations'
+jobSimulationController.editJobSimById);
+  
 router.delete('/delete-job-simulation/:simulationId',authMiddleware,
-authorizeRole("recruiter"),jobSimulationController.deleteJobSimById);
+  authorizeRole("recruiter"),
+  // #swagger.security = [{ "bearerAuth": [] }]
+  // #swagger.tags = ['Recruiters']
+  // #swagger.summary = 'Delete Job Simulation'
+jobSimulationController.deleteJobSimById);
 
 //TASK ROUTES
-  // #swagger.security = [{ "bearerAuth": [] }]
 router.post('/create-task/:simulationId',authMiddleware,
-authorizeRole("recruiter"),validateSchema(createTaskSchema),jobSimulationController.createTask);
-
+  authorizeRole("recruiter"),validateSchema(createTaskSchema),
   // #swagger.security = [{ "bearerAuth": [] }]
-router.put('/edit-task/:taskId',authMiddleware,authorizeRole("recruiter"),jobSimulationController.editTask);
+  // #swager.tags = ['Recruiters']
+  // #swagger.summary = 'Create Task'
+jobSimulationController.createTask);
 
-  // #swagger.security = [{ "bearerAuth": [] }]
-router.delete('/delete-task/:taskId',authMiddleware,authorizeRole("recruiter"),jobSimulationController.deleteTask);
+router.put('/edit-task/:taskId',authMiddleware,authorizeRole("recruiter"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags = ['Recruiters']
+// #swagger.summary = 'Edit Task'
+jobSimulationController.editTask);
+
+router.delete('/delete-task/:taskId',authMiddleware,authorizeRole("recruiter"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags = ['Recruiters']
+// #swagger.summary = 'Delete Task'
+jobSimulationController.deleteTask);
 
 //INTERNSHIP ROUTES
-  // #swagger.security = [{ "bearerAuth": [] }]
 router.post('/create-internship',authMiddleware,
-authorizeRole("recruiter"),validateSchema(createInternshipPostSchema),internshipController.createInternshipPost);
+  authorizeRole("recruiter"),validateSchema(createInternshipPostSchema),
+  // #swagger.security = [{ "bearerAuth": [] }]
+  // #swagger.tags = ['Recruiters']
+  // #swager.summary = 'Create Internship Post'
+internshipController.createInternshipPost);
 
-  // #swagger.security = [{ "bearerAuth": [] }]
 router.put('/edit-internship/:internshipId',authMiddleware,
-authorizeRole("recruiter"),internshipController.editInternshipPost);
+  authorizeRole("recruiter"),
   // #swagger.security = [{ "bearerAuth": [] }]
+  // #swagger.tags = ['Recruiters']
+  // #swagger.summary = 'Edit Internship Post'
+internshipController.editInternshipPost);
+
 router.delete('/delete-internship/:internshipId',authMiddleware,
-authorizeRole("recruiter"),internshipController.deleteInternshipPost);
+  authorizeRole("recruiter"),
+  // #swagger.security = [{ "bearerAuth": [] }]
+  // #swagger.tags = ['Recruiters']
+  // #swagger.summary = 'Delete Internship Post'
+internshipController.deleteInternshipPost);
 
 //ENROLLMENT
-router.get('/enrollments/get-completed',authMiddleware,authorizeRole("recruiter"),recruiterProfile.viewAllTasks);
+router.get('/enrollments/get-completed',authMiddleware,authorizeRole("recruiter"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags = ['Recruiters']
+// #swagger.summary = 'Get list of completed enrollments'
+recruiterProfile.viewAllTasks);
 
-router.post('/enrollments/:enrollmentId/review',authMiddleware,authorizeRole("recruiter"),recruiterProfile.reviewEnrollment);
+router.post('/enrollments/:enrollmentId/review',authMiddleware,authorizeRole("recruiter"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags = ['Recruiters']
+// #swagger.summary = 'Review Enrollment'
+recruiterProfile.reviewEnrollment);
 
 // router.post('/certificates/enrollments/:enrollmentId/generate',authMiddleware,authorizeRole("recruiter"),recruiterProfile.generateCertForEnrollment);
 
-router.post('/certificates/enrollments/:enrollmentId/generate',authMiddleware,authorizeRole("recruiter"),recruiterProfile.generateAndUploadCertificate)
+router.post('/certificates/enrollments/:enrollmentId/generate',authMiddleware,authorizeRole("recruiter"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags = ['Recruiters']
+// #swagger.summary = 'Generate Certficate'
+recruiterProfile.generateAndUploadCertificate)
 
 //PROFILE
-router.get('/profile/overview',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getRecruiterAnalytics);
+router.get('/profile/overview',authMiddleware,authorizeRole("recruiter"),
+// #swagger.security = [{ "bearerAuth": []}]
+// #swagger.tags = ['Recruiters']
+// #swagger.summary = 'General Overview'
+recruiterProfile.getRecruiterAnalytics);
 
-router.get('/profile/overview/simulations',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getAllSimulationsByCompany);
+router.get('/profile/overview/simulations',authMiddleware,authorizeRole("recruiter"),
+// #swagger.security = [{ "bearerAuth": []}]
+// #swagger.tags = ['Recruiters']
+// #swagger.summary = 'Simulation Stats By A Specific Company'
+recruiterProfile.getAllSimulationsByCompany);
 
-router.get('/profile/overview/simulations/:simulationId',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getSingleCompanySimulationWithTasks);
+router.get('/profile/overview/simulations/:simulationId',authMiddleware,authorizeRole("recruiter"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags = ['Recruiters']
+// #swagger.summary = 'View Specific Simulation '
+recruiterProfile.getSingleCompanySimulationWithTasks);
+no
+router.get('/profile/overview/simulations/participants',authMiddleware,authorizeRole("recruiter"),
+// #swagger.security = [{"bearerAuth": [] }]
+// #swagger.tags = ['Recruiters']
+// #swagger.summary = 'Participant Stats For A Specific Company'
+recruiterProfile.getAllParticipantsByCompanyId);
 
-router.get('/profile/overview/simulations/participants',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getAllParticipantsByCompanyId);
+router.get('/profile/overview/internships',authMiddleware,authorizeRole("recruiter"),
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags = ['Recruiters']
+// #swagger.summary = 'List of Internships by A Specific Company'
+recruiterProfile.getAllInternshipsByCompanyId);
 
-router.get('/profile/overview/internships',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getAllInternshipsByCompanyId);
+router.get('/profile/overview/internships/:internshipId',authMiddleware,authorizeRole("recruiter"),
+// #swagger.security= [{ "bearerAuth": [] }]
+// #swagger.tags = ['Recruiters']
+// #swagger.summary = 'Details of A single internship'
+recruiterProfile.getSingleCompanyInternshipById);
 
-router.get('/profile/overview/internships/:internshipId',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getSingleCompanyInternshipById);
-
-router.get('/profile/overview/internships/:internshipId/applicants',authMiddleware,authorizeRole("recruiter"),recruiterProfile.getAllInternshipsApplicants);
+router.get('/profile/overview/internships/:internshipId/applicants',authMiddleware,authorizeRole("recruiter"),
+// #swagger.security = [{"bearerAuth": [] }]
+// #swagger.tags = ['Recruiters']
+// #swagger.summary = 'Get List of Specific Internship Applicants'
+recruiterProfile.getAllInternshipsApplicants);
 
 
 
