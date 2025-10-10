@@ -23,6 +23,12 @@
     },
     "/api/auth/signup": {
       "post": {
+        "tags": [
+          "Users",
+          "Recruiters",
+          "Admins"
+        ],
+        "summary": "Sign Up",
         "description": "",
         "parameters": [
           {
@@ -78,8 +84,59 @@
         }
       }
     },
+    "/api/auth/newsignup": {
+      "post": {
+        "tags": [
+          "Users",
+          "Recruiters",
+          "Admins"
+        ],
+        "summary": "New Sign Up (Untested)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "example": "any"
+                },
+                "lastName": {
+                  "example": "any"
+                },
+                "userName": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "role": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/auth/login": {
       "post": {
+        "tags": [
+          "Users",
+          "Recruiters",
+          "Admins"
+        ],
+        "summary": "Log In",
         "description": "",
         "parameters": [
           {
@@ -117,7 +174,9 @@
     "/api/user/view-all-simulations": {
       "get": {
         "tags": [
-          "Users"
+          "Users",
+          "Recruiters",
+          "Admins"
         ],
         "summary": "View All Simulations",
         "description": "",
@@ -360,7 +419,7 @@
         "tags": [
           "Users"
         ],
-        "summary": "delete task",
+        "summary": "Delete task",
         "description": "",
         "parameters": [
           {
@@ -529,6 +588,10 @@
     },
     "/api/user/view-internships/{internshipId}/apply": {
       "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Internship Application",
         "description": "",
         "parameters": [
           {
@@ -547,11 +610,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/user/internships/search": {
       "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Backend Search & Flitering",
         "description": "",
         "parameters": [
           {
@@ -589,11 +661,20 @@
           "default": {
             "description": ""
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/user/profile/stats": {
       "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "View User Profile",
         "description": "",
         "parameters": [
           {
@@ -606,11 +687,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/user/profile/account": {
       "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "View User Account Details",
         "description": "",
         "parameters": [
           {
@@ -623,11 +713,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/user/profile/enrollments": {
       "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "View Simulations enrolled in",
         "description": "",
         "parameters": [
           {
@@ -640,11 +739,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/user/profile/applications": {
       "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "View Internships applied for",
         "description": "",
         "parameters": [
           {
@@ -657,11 +765,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/user/profile/certificates": {
       "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "View User Certificates",
         "description": "",
         "parameters": [
           {
@@ -674,11 +791,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/recruiter/create-company": {
       "post": {
+        "tags": [
+          "Recruiters"
+        ],
+        "summary": "Create New Company(Organization)",
         "description": "",
         "parameters": [
           {
@@ -712,11 +838,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/recruiter/edit-company/{companyId}": {
       "put": {
+        "tags": [
+          "Recruiters"
+        ],
+        "summary": "Edit Organizational Data",
         "description": "",
         "parameters": [
           {
@@ -756,11 +891,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/recruiter/create-job-simulation": {
       "post": {
+        "tags": [
+          "Recruiters"
+        ],
+        "summary": "Create Job simulation",
         "description": "",
         "parameters": [
           {
@@ -806,11 +950,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/recruiter/edit-job-simulation/{simulationId}": {
       "put": {
+        "tags": [
+          "Recruiters"
+        ],
+        "summary": "Edit Job Simulations",
         "description": "",
         "parameters": [
           {
@@ -859,11 +1012,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/recruiter/delete-job-simulation/{simulationId}": {
       "delete": {
+        "tags": [
+          "Recruiters"
+        ],
+        "summary": "Delete Job Simulation",
         "description": "",
         "parameters": [
           {
@@ -882,11 +1044,17 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/recruiter/create-task/{simulationId}": {
       "post": {
+        "summary": "Create Task",
         "description": "",
         "parameters": [
           {
@@ -929,11 +1097,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/recruiter/edit-task/{taskId}": {
       "put": {
+        "tags": [
+          "Recruiters"
+        ],
+        "summary": "Edit Task",
         "description": "",
         "parameters": [
           {
@@ -970,11 +1147,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/recruiter/delete-task/{taskId}": {
       "delete": {
+        "tags": [
+          "Recruiters"
+        ],
+        "summary": "Delete Task",
         "description": "",
         "parameters": [
           {
@@ -993,11 +1179,19 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/recruiter/create-internship": {
       "post": {
+        "tags": [
+          "Recruiters"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1040,11 +1234,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/recruiter/edit-internship/{internshipId}": {
       "put": {
+        "tags": [
+          "Recruiters"
+        ],
+        "summary": "Edit Internship Post",
         "description": "",
         "parameters": [
           {
@@ -1090,11 +1293,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/recruiter/delete-internship/{internshipId}": {
       "delete": {
+        "tags": [
+          "Recruiters"
+        ],
+        "summary": "Delete Internship Post",
         "description": "",
         "parameters": [
           {
@@ -1113,11 +1325,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/recruiter/enrollments/get-completed": {
       "get": {
+        "tags": [
+          "Recruiters"
+        ],
+        "summary": "Get list of completed enrollments",
         "description": "",
         "parameters": [
           {
@@ -1130,11 +1351,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/recruiter/enrollments/{enrollmentId}/review": {
       "post": {
+        "tags": [
+          "Recruiters"
+        ],
+        "summary": "Review Enrollment",
         "description": "",
         "parameters": [
           {
@@ -1168,11 +1398,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/recruiter/certificates/enrollments/{enrollmentId}/generate": {
       "post": {
+        "tags": [
+          "Recruiters"
+        ],
+        "summary": "Generate Certficate",
         "description": "",
         "parameters": [
           {
@@ -1191,11 +1430,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/recruiter/profile/overview": {
       "get": {
+        "tags": [
+          "Recruiters"
+        ],
+        "summary": "General Overview",
         "description": "",
         "parameters": [
           {
@@ -1208,11 +1456,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/recruiter/profile/overview/simulations": {
       "get": {
+        "tags": [
+          "Recruiters"
+        ],
+        "summary": "Simulation Stats By A Specific Company",
         "description": "",
         "parameters": [
           {
@@ -1225,11 +1482,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/recruiter/profile/overview/simulations/{simulationId}": {
       "get": {
+        "tags": [
+          "Recruiters"
+        ],
+        "summary": "View Specific Simulation ",
         "description": "",
         "parameters": [
           {
@@ -1248,11 +1514,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/recruiter/profile/overview/simulations/participants": {
       "get": {
+        "tags": [
+          "Recruiters"
+        ],
+        "summary": "Participant Stats For A Specific Company",
         "description": "",
         "parameters": [
           {
@@ -1265,11 +1540,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/recruiter/profile/overview/internships": {
       "get": {
+        "tags": [
+          "Recruiters"
+        ],
+        "summary": "List of Internships by A Specific Company",
         "description": "",
         "parameters": [
           {
@@ -1282,11 +1566,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/recruiter/profile/overview/internships/{internshipId}": {
       "get": {
+        "tags": [
+          "Recruiters"
+        ],
+        "summary": "Details of A single internship",
         "description": "",
         "parameters": [
           {
@@ -1305,11 +1598,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/recruiter/profile/overview/internships/{internshipId}/applicants": {
       "get": {
+        "tags": [
+          "Recruiters"
+        ],
+        "summary": "Get List of Specific Internship Applicants",
         "description": "",
         "parameters": [
           {
@@ -1328,7 +1630,12 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/admin/profile/overview": {
