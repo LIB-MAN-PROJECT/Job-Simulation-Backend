@@ -90,7 +90,7 @@ jobSimulationController.deleteJobSimById);
 router.post('/create-task/:simulationId',authMiddleware,
   authorizeRole("recruiter"),validateSchema(createTaskSchema),
   // #swagger.security = [{ "bearerAuth": [] }]
-  // #swager.tags = ['Recruiters']
+  // #swagger.tags = ['Recruiters']
   // #swagger.summary = 'Create Task'
 jobSimulationController.createTask);
 
