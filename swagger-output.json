@@ -221,6 +221,9 @@
     },
     "/api/user/simulations/search": {
       "get": {
+        "tags": [
+          "Users"
+        ],
         "summary": "Search for simulations via different metrics",
         "description": "",
         "parameters": [
@@ -264,7 +267,12 @@
           "default": {
             "description": ""
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/user/simulation/{simulationId}/enroll": {
@@ -560,16 +568,29 @@
     },
     "/api/user/view-all-internships": {
       "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "View all Internships",
         "description": "",
         "responses": {
           "default": {
             "description": ""
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/user/view-internships/{internshipId}": {
       "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "View specific Internship details",
         "description": "",
         "parameters": [
           {
@@ -583,7 +604,12 @@
           "default": {
             "description": ""
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/user/view-internships/{internshipId}/apply": {
@@ -1054,6 +1080,9 @@
     },
     "/api/recruiter/create-task/{simulationId}": {
       "post": {
+        "tags": [
+          "Recruiters"
+        ],
         "summary": "Create Task",
         "description": "",
         "parameters": [
@@ -1640,6 +1669,10 @@
     },
     "/api/admin/profile/overview": {
       "get": {
+        "tags": [
+          "Admins"
+        ],
+        "summary": "General Statistical Overview",
         "description": "",
         "parameters": [
           {
@@ -1652,11 +1685,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/admin/profile/users/students": {
       "get": {
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Obtain list of students",
         "description": "",
         "parameters": [
           {
@@ -1669,11 +1711,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/admin/profile/users/recruiters": {
       "get": {
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Obtain list of recruiters",
         "description": "",
         "parameters": [
           {
@@ -1686,11 +1737,19 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/admin/profile/companies": {
       "get": {
+        "tags": [
+          "Admins"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1703,11 +1762,20 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/admin/profile/verify-recruiter/{id}": {
       "patch": {
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Verify recruiter",
         "description": "",
         "parameters": [
           {
@@ -1721,11 +1789,20 @@
           "default": {
             "description": ""
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/admin/profile/unverify-recruiter/{id}": {
       "patch": {
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Revoke recruiter verification status",
         "description": "",
         "parameters": [
           {
@@ -1739,7 +1816,12 @@
           "default": {
             "description": ""
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     }
   },
