@@ -24,7 +24,9 @@ router.get('/view-simulations/:simulationId',authMiddleware,
 jobSimulationController.viewJobSimsById);
 
 router.get('/simulations/search',
-//#swagger.summary='Search for simulations via different metrics'
+// #swagger.security = [{"bearerAuth": [] }]
+// #swagger.tags = ['Users']
+// #swagger.summary='Search for simulations via different metrics'
 jobSimulationController.searchSimulations);
 
 //ENROLLMENT
@@ -82,9 +84,17 @@ reviewController.editReview);
 
 
 //INTERNSHIP POSTS
-router.get('/view-all-internships',internshipController.viewAllInternshipPosts);
+router.get('/view-all-internships',
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags=['Users']
+// #swagger.summary= 'View all Internships'
+internshipController.viewAllInternshipPosts);
 
-router.get('/view-internships/:internshipId',internshipController.viewInternshipPostById);
+router.get('/view-internships/:internshipId',
+  // #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.tags=['Users']
+// #swagger.summary= 'View specific Internship details'
+  internshipController.viewInternshipPostById);
 
   // #swagger.security = [{ "bearerAuth": [] }]
 router.post('/view-internships/:internshipId/apply',authMiddleware,authorizeRole("student"),uploadDocument.single("file"),
