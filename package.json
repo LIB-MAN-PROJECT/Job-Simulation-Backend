@@ -21,7 +21,7 @@
     "mongoose": "^8.16.1",
     "multer": "^2.0.1",
     "nanoid": "^5.1.5",
-    "nodemailer": "^7.0.7",
+    "nodemailer": "^7.0.5",
     "pdfkit": "^0.17.1",
     "streamifier": "^0.1.1",
     "swagger-autogen": "^2.23.7",
