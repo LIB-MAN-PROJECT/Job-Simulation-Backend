@@ -6,13 +6,41 @@ const { authMiddleware, authorizeRole } = require("../middleware/authMiddleware.
 
 // router.post('/create-company',createCompany);
 
-router.get('/profile/overview',authMiddleware,authorizeRole("admin"),adminController.getAppAnalytics);
-router.get('/profile/users/students',authMiddleware,authorizeRole("admin"),adminController.getStudents);
-router.get('/profile/users/recruiters',authMiddleware,authorizeRole("admin"),adminController.getRecruiters);
-router.get('/profile/companies',authMiddleware,authorizeRole("admin"),adminController.getCompanies);
+router.get('/profile/overview',authMiddleware,authorizeRole("admin"),
+// #swagger.security = [{"bearerAuth": [] }]
+// #swagger.tags = ['Admins']
+// #swagger.summary = 'General Statistical Overview'
+adminController.getAppAnalytics);
+
+router.get('/profile/users/students',authMiddleware,authorizeRole("admin"),
+// #swagger.security = [{"bearerAuth": []}]
+// #swagger.tags = ['Admins']
+// #swagger.summary ='Obtain list of students'
+adminController.getStudents);
+
+router.get('/profile/users/recruiters',authMiddleware,authorizeRole("admin"),
+// #swagger.security = [{"bearerAuth": []}]
+// #swagger.tags = ['Admins']
+// #swagger.summary ='Obtain list of recruiters'
+adminController.getRecruiters);
+
+router.get('/profile/companies',authMiddleware,authorizeRole("admin"),
+// #swagger.security = [{"bearerAuth": []}]
+// #swagger.tags = ['Admins']
+// #swager.summary ='Obtain list of companies (organizations)'
+adminController.getCompanies);
 
 
-router.patch('/profile/verify-recruiter/:id',verifyRecruiter);
-router.patch('/profile/unverify-recruiter/:id',unverifyRecruiter);
+router.patch('/profile/verify-recruiter/:id',
+// #swagger.security=[{"bearerAuth": [] }]
+// #swagger.tags = ['Admins']
+// #swagger.summary = 'Verify recruiter'
+verifyRecruiter);
+
+router.patch('/profile/unverify-recruiter/:id',
+// #swagger.security = [{"bearerAuth": []}]
+// #swagger.tags = ['Admins']
+// #swagger.summary = 'Revoke recruiter verification status'
+unverifyRecruiter);
 
 module.exports=router;
