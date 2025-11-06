@@ -50,6 +50,7 @@ router.post('/simulation/:simulationId/task/:taskId/submit-task',authMiddleware,
 // #swagger.tags=['Users']
 // #swagger.summary='Submit tasks'
 // #swagger.description='Only documents should be submitted'
+// #swagger.consumes = ['multipart/form-data']
 taskSubmissionController.submitTask);
 
 //Editing Submitted task
@@ -58,6 +59,7 @@ router.put('/simulation/:simulationId/task/:taskId/submission/:taskSubmissonId/e
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.tags=['Users']
 // #swagger.summary='Edit submitted task'
+// #swagger.consumes =['multipart/form-data']
 taskSubmissionController.editSubmittedTask);
 
   //Deleting submitted task
@@ -101,6 +103,7 @@ router.post('/view-internships/:internshipId/apply',authMiddleware,authorizeRole
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.tags=['Users']
 // #swagger.summary= 'Internship Application'
+// #swagger.consumes = ['multipart/form-data']
 internshipController.applyForInternship);
 
 router.get('/internships/search',
