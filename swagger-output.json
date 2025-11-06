@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Job Simulation Management API",
-    "description": "An API for managing Job Simulations and Internship for a variety of different categories of users",
+    "description": "A RESTful API for providing and managing Job Simulations and Internships for users who need to enter the job market but have no idea of the skills they need to thrive in their respective fields\n        \n        ## Key Features\n        ",
     "version": "1.0.0"
   },
   "host": "job-simulation-backend-3e6w.onrender.com",
@@ -347,6 +347,9 @@
         ],
         "summary": "Submit tasks",
         "description": "Only documents should be submitted",
+        "consumes": [
+          "multipart/form-data"
+        ],
         "parameters": [
           {
             "name": "simulationId",
@@ -385,6 +388,9 @@
         ],
         "summary": "Edit submitted task",
         "description": "",
+        "consumes": [
+          "multipart/form-data"
+        ],
         "parameters": [
           {
             "name": "simulationId",
@@ -619,6 +625,9 @@
         ],
         "summary": "Internship Application",
         "description": "",
+        "consumes": [
+          "multipart/form-data"
+        ],
         "parameters": [
           {
             "name": "internshipId",

@@ -3,7 +3,10 @@ const swaggerAutogen = require("swagger-autogen");
 const doc={
     info: {
         title: "Job Simulation Management API",
-        description: "An API for managing Job Simulations and Internship for a variety of different categories of users"
+        description: `A RESTful API for providing and managing Job Simulations and Internships for users who need to enter the job market but have no idea of the skills they need to thrive in their respective fields
+        
+        ## Key Features
+        `
     },
     host: "job-simulation-backend-3e6w.onrender.com",
     schemes:["https"],
