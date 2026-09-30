@@ -187,7 +187,7 @@ const editTask= async(req,res)=>{
     }
 }
 
-const deleteTask = async(req,res)=>{
+    const deleteTask = async(req,res)=>{
     const {taskId}=req.params;
 //TODO: prevent deletion if task is attempted by user
     try {
@@ -269,14 +269,14 @@ const searchSimulations = async(req,res)=>{
         if (isHiring === 'true') {
         filter.isHiring ='true';
         }
-        else if(isHiring === 'false'){
+        else{
             filter.isHiring ='false'
         }
         
         if (isPublished === 'true') {
         filter.isPublished ='true';
         }
-        if (isPublished === 'false') {
+        else{
         filter.isPublished ='false';
         }
        
