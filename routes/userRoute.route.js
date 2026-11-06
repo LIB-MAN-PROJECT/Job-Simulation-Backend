@@ -51,15 +51,26 @@ router.post('/simulation/:simulationId/task/:taskId/submit-task',authMiddleware,
 // #swagger.summary='Submit tasks'
 // #swagger.description='Only documents should be submitted'
 // #swagger.consumes = ['multipart/form-data']
+/* #swagger.parameters['file'] = {
+     in: 'formData',
+     type: 'file',
+     required: true,
+     description: 'Task submission document (PDF/DOC/DOCX, max 10MB)'
+} */
 taskSubmissionController.submitTask);
 
 //Editing Submitted task
-  // #swagger.security = [{ "bearerAuth": [] }]
 router.put('/simulation/:simulationId/task/:taskId/submission/:taskSubmissonId/edit-submission',authMiddleware,authorizeRole("student"),uploadDocument.single("file"),
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.tags=['Users']
 // #swagger.summary='Edit submitted task'
 // #swagger.consumes =['multipart/form-data']
+/* #swagger.parameters['file'] = {
+     in: 'formData',
+     type: 'file',
+     required: false,
+     description: 'Replacement document (PDF/DOC/DOCX, max 10MB)'
+} */
 taskSubmissionController.editSubmittedTask);
 
   //Deleting submitted task
@@ -98,12 +109,18 @@ router.get('/view-internships/:internshipId',
 // #swagger.summary= 'View specific Internship details'
   internshipController.viewInternshipPostById);
 
-  // #swagger.security = [{ "bearerAuth": [] }]
+
 router.post('/view-internships/:internshipId/apply',authMiddleware,authorizeRole("student"),uploadDocument.single("file"),
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.tags=['Users']
 // #swagger.summary= 'Internship Application'
 // #swagger.consumes = ['multipart/form-data']
+/* #swagger.parameters['file'] = {
+     in: 'formData',
+     type: 'file',
+     required: true,
+     description: 'Application document, e.g. CV (PDF/DOC/DOCX, max 10MB)'
+} */
 internshipController.applyForInternship);
 
 router.get('/internships/search',
