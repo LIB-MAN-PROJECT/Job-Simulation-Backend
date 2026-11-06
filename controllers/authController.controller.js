@@ -266,6 +266,8 @@ const login = async (req, res) => {
     }
 }
 
+// Seems the old sign up flow was too long, we could shorten it by making a sign up then 
+// an onboarding flow
 //TODO: Add email function
 const newSignUp = async(req,res)=>{
     try {
