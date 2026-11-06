@@ -18,65 +18,56 @@ authorizeRole("recruiter"),
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.tags = ['Recruiters']
 // #swagger.summary = 'Create New Company(Organization)'
+// #swagger.consumes = ['multipart/form-data']
+/* #swagger.parameters['file'] = {
+     in: 'formData',
+     type: 'file',
+     required: false,
+     description: 'Company logo (JPEG/PNG, max 5MB)'
+} */
 companyController.createCompany);
 
 router.put('/edit-company/:companyId',uploadImage.single("file"),authMiddleware,authorizeRole("recruiter"),
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.tags = ['Recruiters']
 // #swagger.summary = 'Edit Organizational Data'
+// #swagger.consumes = ['multipart/form-data']
+/* #swagger.parameters['file'] = {
+     in: 'formData',
+     type: 'file',
+     required: false,
+     description: 'Company logo (JPEG/PNG, max 5MB)'
+} */
 companyController.editCompany);
 
 //JOB SIM ROUTES
 
-// File: routes/recruiterRoute.route.js
-
-/**
- * @swagger
- * /upload:
- *   post:
- *     summary: Upload a file
- *     consumes:
- *       - multipart/form-data
- *     parameters:
- *       - in: formData
- *         name: file
- *         type: file
- *         required: true
- *         description: The file to upload
- *     responses:
- *       200:
- *         description: File uploaded successfully
- */
 router.post('/create-job-simulation',uploadImage.single("file"),validateSchema(createSimulationSchema),
 authMiddleware,authorizeRole("recruiter"),
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.tags = ['Recruiters']
 // #swagger.summary='Create Job simulation'
+// #swagger.consumes = ['multipart/form-data']
+/* #swagger.parameters['file'] = {
+     in: 'formData',
+     type: 'file',
+     required: false,
+     description: 'Simulation image (JPEG/PNG, max 5MB)'
+} */
 jobSimulationController.createJobSim);
-
-/**
- * @swagger
- * /upload:
- *   post:
- *     summary: Upload a file
- *     consumes:
- *       - multipart/form-data
- *     parameters:
- *       - in: formData
- *         name: file
- *         type: file
- *         required: true
- *         description: The file to upload
- *     responses:
- *       200:
- *         description: File uploaded successfully
- */
 
 router.put('/edit-job-simulation/:simulationId',uploadImage.single("file"),
 authMiddleware,authorizeRole("recruiter"),
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.tags=['Recruiters']
 // #swagger.summary = 'Edit Job Simulations'
+// #swagger.consumes = ['multipart/form-data']
+/* #swagger.parameters['file'] = {
+     in: 'formData',
+     type: 'file',
+     required: false,
+     description: 'Simulation image (JPEG/PNG, max 5MB)'
+} */
 jobSimulationController.editJobSimById);
   
 router.delete('/delete-job-simulation/:simulationId',authMiddleware,
