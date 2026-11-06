@@ -7,27 +7,16 @@ const loginSchema = require("../validation/loginSchema.schema");
 const router = Router();
 
 
-// File: routes/regsitrationRoute.route.js
-/**
- * @swagger
- * /upload:
- *   post:
- *     summary: Upload a file
- *     consumes:
- *       - multipart/form-data
- *     parameters:
- *       - in: formData
- *         name: file
- *         type: file
- *         required: true
- *         description: The file to upload
- *     responses:
- *       200:
- *         description: File uploaded successfully
- */
 router.post("/signup",uploadImage.single("file"),validateSchema(signupSchema),
 // #swagger.tags=['Users','Recruiters', 'Admins']
 // #swagger.summary = 'Sign Up'
+// #swagger.consumes = ['multipart/form-data']
+/* #swagger.parameters['file'] = {
+     in: 'formData',
+     type: 'file',
+     required: false,
+     description: 'Profile image (JPEG/PNG, max 5MB)'
+} */
 signup);
 
 router.post("/newsignup",validateSchema(signupSchema),
