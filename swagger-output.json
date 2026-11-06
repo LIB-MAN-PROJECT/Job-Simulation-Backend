@@ -30,7 +30,17 @@
         ],
         "summary": "Sign Up",
         "description": "",
+        "consumes": [
+          "multipart/form-data"
+        ],
         "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "type": "file",
+            "required": false,
+            "description": "Profile image (JPEG/PNG, max 5MB)"
+          },
           {
             "name": "body",
             "in": "body",
@@ -367,6 +377,13 @@
             "name": "authorization",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "file",
+            "in": "formData",
+            "type": "file",
+            "required": true,
+            "description": "Task submission document (PDF/DOC/DOCX, max 10MB)"
           }
         ],
         "responses": {
@@ -414,6 +431,13 @@
             "name": "authorization",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "file",
+            "in": "formData",
+            "type": "file",
+            "required": false,
+            "description": "Replacement document (PDF/DOC/DOCX, max 10MB)"
           }
         ],
         "responses": {
@@ -639,6 +663,13 @@
             "name": "authorization",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "file",
+            "in": "formData",
+            "type": "file",
+            "required": true,
+            "description": "Application document, e.g. CV (PDF/DOC/DOCX, max 10MB)"
           }
         ],
         "responses": {
@@ -841,11 +872,21 @@
         ],
         "summary": "Create New Company(Organization)",
         "description": "",
+        "consumes": [
+          "multipart/form-data"
+        ],
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "file",
+            "in": "formData",
+            "type": "file",
+            "required": false,
+            "description": "Company logo (JPEG/PNG, max 5MB)"
           },
           {
             "name": "body",
@@ -888,6 +929,9 @@
         ],
         "summary": "Edit Organizational Data",
         "description": "",
+        "consumes": [
+          "multipart/form-data"
+        ],
         "parameters": [
           {
             "name": "companyId",
@@ -899,6 +943,13 @@
             "name": "authorization",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "file",
+            "in": "formData",
+            "type": "file",
+            "required": false,
+            "description": "Company logo (JPEG/PNG, max 5MB)"
           },
           {
             "name": "body",
@@ -941,11 +992,21 @@
         ],
         "summary": "Create Job simulation",
         "description": "",
+        "consumes": [
+          "multipart/form-data"
+        ],
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "file",
+            "in": "formData",
+            "type": "file",
+            "required": false,
+            "description": "Simulation image (JPEG/PNG, max 5MB)"
           },
           {
             "name": "body",
@@ -1000,6 +1061,9 @@
         ],
         "summary": "Edit Job Simulations",
         "description": "",
+        "consumes": [
+          "multipart/form-data"
+        ],
         "parameters": [
           {
             "name": "simulationId",
@@ -1011,6 +1075,13 @@
             "name": "authorization",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "file",
+            "in": "formData",
+            "type": "file",
+            "required": false,
+            "description": "Simulation image (JPEG/PNG, max 5MB)"
           },
           {
             "name": "body",
